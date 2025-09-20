@@ -7,11 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`dark antialiased`}
-      >
-        {children}
-      </body>
+      <body className={`dark antialiased`}>{children}</body>
     </html>
   )
 }
