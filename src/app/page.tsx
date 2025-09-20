@@ -1,7 +1,14 @@
+import { Hero } from './components/landing-page/hero'
+
 export default function Home() {
   return (
-    <div>
-      <h1>Hello World</h1>
+    <div className="mx-auto max-w-7xl">
+      {/* <Header /> */}
+      <Hero />
+      {/* <VideoExplanation /> */}
+      {/* <Pricing /> */}
+      {/* <FAQ /> */}
+      {/* <Footer /> */}
     </div>
   )
 }
