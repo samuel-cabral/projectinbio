@@ -42,13 +42,13 @@ export function UserCard() {
             </button>
           ))}
         </div>
-        <div className="flex h-[172px] w-full flex-col gap-3">
-          <div className="flex w-full flex-col items-center gap-3">
-            <Button className="w-full">Template SaaS - Compre agora</Button>
-            <button className="rounded-xl bg-[#1E1E1E] p-3 hover:bg-[#2E2E2E]">
-              <Plus />
-            </button>
-          </div>
+      </div>
+      <div className="flex h-[172px] w-full flex-col gap-3">
+        <div className="flex w-full flex-col items-center gap-3">
+          <Button className="w-full">Template SaaS - Compre agora</Button>
+          <button className="rounded-xl bg-[#1E1E1E] p-3 hover:bg-[#2E2E2E]">
+            <Plus />
+          </button>
         </div>
       </div>
     </div>
