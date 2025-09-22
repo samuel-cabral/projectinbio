@@ -1,9 +1,10 @@
+import { Header } from '../components/landing-page/header'
 import { Hero } from '../components/landing-page/hero'
 
 export default function Home() {
   return (
     <div className="mx-auto max-w-7xl">
-      {/* <Header /> */}
+      <Header />
       <Hero />
       {/* <VideoExplanation /> */}
       {/* <Pricing /> */}
