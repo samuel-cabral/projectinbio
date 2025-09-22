@@ -1,3 +1,4 @@
+import { ProjectCard } from '../common/project-card'
 import { TotalVisits } from '../common/total-visits'
 import { UserCard } from '../common/user-card'
 import { Button } from '../ui/button'
@@ -7,7 +8,7 @@ export function Hero() {
   return (
     <div className="flex h-screen">
       <div className="mt-[35vh] flex w-full flex-col gap-2">
-        <h1 className="text-5xl leading-[64px] font-bold text-white">
+        <h1 className="max-w-[600px] text-5xl leading-[64px] font-bold text-white">
           Seus projetos e redes sociais em um único link
         </h1>
         <h2 className="text-xl leading-6">
@@ -30,10 +31,10 @@ export function Hero() {
             <TotalVisits />
           </div>
           <div className="absolute top-[20%] -left-[45%] -z-10">
-            {/* <ProjectCard /> */}
+            <ProjectCard />
           </div>
           <div className="absolute -top-[5%] -left-[55%] -z-10">
-            {/* <ProjectCard /> */}
+            <ProjectCard />
           </div>
         </div>
       </div>
