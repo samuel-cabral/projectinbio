@@ -11,7 +11,7 @@ export function Hero() {
         <h1 className="max-w-[600px] text-5xl leading-[64px] font-bold text-white">
           Seus projetos e redes sociais em um único link
         </h1>
-        <h2 className="text-xl leading-6">
+        <h2 className="text-muted-foreground text-xl leading-6">
           Crie sua própria página de projetos e compartilhe eles com o mundo.
           <br />
           Acompanhe o engajamento com Analytics de clicks.
