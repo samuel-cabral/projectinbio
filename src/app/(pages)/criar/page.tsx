@@ -4,7 +4,7 @@ import { Header } from '@/components/landing-page/header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-export default function Criar() {
+export default function CriarPage() {
   return (
     <div>
       <Header />
@@ -15,7 +15,7 @@ export default function Criar() {
         </div>
 
         <form action="" className="mt-5 flex w-full items-center gap-2">
-          <span>projectinbio/</span>
+          <span>projectinbio.com/</span>
           <Input
             type="text"
             className="border-accent bg-accent h-12 w-full rounded-xl"
