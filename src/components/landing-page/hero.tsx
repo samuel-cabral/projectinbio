@@ -19,7 +19,11 @@ export function Hero() {
 
         <div className="mt-[10vh] flex w-full items-center gap-2">
           <span className="text-xl text-white">projectinbio.com/</span>
-          <Input type="text" placeholder="Seu link" className="h-12" />
+          <Input
+            type="text"
+            placeholder="Seu link"
+            className="border-background bg-background h-12"
+          />
           <Button className="h-12">Criar agora</Button>
         </div>
       </div>
