@@ -1,4 +1,5 @@
-import { Plus, Sparkles } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import Link from 'next/link'
 
 import { ProjectCard } from '@/components/common/project-card'
 import { TotalVisits } from '@/components/common/total-visits'
@@ -15,11 +16,13 @@ export default async function ProfilePage({
     <div className="relative flex h-screen overflow-hidden p-20">
       <div className="bg-card text-foreground fixed top-0 left-0 flex w-full justify-center gap-1 py-2">
         <span>Você está usando a versão trial.</span>
-        <button className="flex items-center gap-1">
-          <span className="text-chart-2 cursor-pointer font-bold">
-            Faça o upgrade agora!
-          </span>
-        </button>
+        <Link href={`/${profileId}/upgrade`}>
+          <button className="flex items-center gap-1">
+            <span className="text-chart-2 cursor-pointer font-bold hover:underline">
+              Faça o upgrade agora!
+            </span>
+          </button>
+        </Link>
       </div>
 
       <div className="flex h-min w-1/2 justify-center">
