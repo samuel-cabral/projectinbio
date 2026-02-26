@@ -8,7 +8,22 @@ export const authConfig = {
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
   pages: {
     signIn: '/',
+  },
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+    session({ session, token }) {
+      session.user.id = token.id as string
+      return session
+    },
   },
 } satisfies NextAuthConfig
