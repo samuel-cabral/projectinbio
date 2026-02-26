@@ -4,6 +4,8 @@ import { Header } from '@/components/landing-page/header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+export const dynamic = 'force-dynamic'
+
 export default function CriarPage() {
   return (
     <div>

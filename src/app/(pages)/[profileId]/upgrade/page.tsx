@@ -6,6 +6,8 @@ import {
   MONTHLY_PRICE,
 } from '@/lib/config'
 
+export const dynamic = 'force-dynamic'
+
 export default function UpgradePage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4">

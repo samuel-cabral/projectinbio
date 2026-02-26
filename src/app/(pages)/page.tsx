@@ -4,6 +4,8 @@ import { Hero } from '../../components/landing-page/hero'
 import { Pricing } from '../../components/landing-page/pricing'
 import { VideoExplanation } from '../../components/landing-page/video-explanation'
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   return (
     <div className="mx-auto max-w-7xl">
