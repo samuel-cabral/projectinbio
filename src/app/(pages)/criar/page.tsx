@@ -1,8 +1,8 @@
 import { Rocket } from 'lucide-react'
 
 import { Header } from '@/components/landing-page/header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+
+import { CreateLinkForm } from './create-link-form'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,18 +16,7 @@ export default function CriarPage() {
           <Rocket className="size-10" />
         </div>
 
-        <form action="" className="mt-5 flex w-full items-center gap-2">
-          <span>projectinbio.com/</span>
-          <Input
-            type="text"
-            className="border-accent bg-accent h-12 w-full rounded-xl"
-          />
-          <Button className="h-12 w-[126px]">Criar</Button>
-        </form>
-
-        <div>
-          <span className="text-destructive">Erro de exemplo</span>
-        </div>
+        <CreateLinkForm />
       </div>
     </div>
   )
