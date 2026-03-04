@@ -1,9 +1,13 @@
-import { Plus } from 'lucide-react'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
+import { NewProjectButton } from '@/app/(pages)/[profileId]/new-project-button'
 import { ProjectCard } from '@/components/common/project-card'
 import { TotalVisits } from '@/components/common/total-visits'
 import { UserCard } from '@/components/common/user-card'
+import { auth } from '@/lib/auth'
+
+import { getProfileData } from '../../server/get-profile-data'
 
 export default async function ProfilePage({
   params,
@@ -11,6 +15,22 @@ export default async function ProfilePage({
   params: Promise<{ profileId: string }>
 }) {
   const { profileId } = await params
+
+  const profileData = await getProfileData(profileId)
+
+  if (!profileData) {
+    return notFound()
+  }
+
+  // TODO: get projects
+
+  const session = await auth()
+
+  const isOwner = session?.user?.id === profileData.userId
+
+  // TODO: add page view
+
+  // TODO: if the user is not in the trial, don't let them see the projects. Redirect to the upgrade page.
 
   return (
     <div className="relative flex h-screen overflow-hidden p-20">
@@ -37,10 +57,7 @@ export default async function ProfilePage({
         <ProjectCard />
         <ProjectCard />
         <ProjectCard />
-        <button className="bg-accent/30 hover:border-accent flex h-[132px] w-[340px] cursor-pointer items-center justify-center gap-2 rounded-[20px] border-2 border-transparent p-3 hover:border-dashed">
-          <Plus className="text-chart-2 size-10" />
-          <span className="text-foreground text-xl">Novo projeto</span>
-        </button>
+        {isOwner && <NewProjectButton profileId={profileId} />}
       </div>
 
       <div className="absolute right-0 bottom-4 left-0 mx-auto w-min">

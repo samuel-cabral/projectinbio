@@ -1,4 +1,3 @@
-import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
@@ -35,6 +34,19 @@ const buttonVariants = cva(
   }
 )
 
+function mergeRefs<T>(
+  ref: React.Ref<T> | undefined,
+  childRef: React.Ref<T> | undefined
+) {
+  return (instance: T | null) => {
+    if (typeof ref === 'function') ref(instance)
+    else if (ref) (ref as React.MutableRefObject<T | null>).current = instance
+    if (typeof childRef === 'function') childRef(instance)
+    else if (childRef)
+      (childRef as React.MutableRefObject<T | null>).current = instance
+  }
+}
+
 function Button({
   className,
   variant,
@@ -45,15 +57,24 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
   }) {
-  const Comp = asChild ? Slot : 'button'
+  const resolvedClassName = cn(buttonVariants({ variant, size, className }))
 
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+  if (asChild && React.Children.count(props.children) === 1) {
+    const child = React.Children.only(props.children) as React.ReactElement<
+      Record<string, unknown> & { className?: string; ref?: React.Ref<unknown> }
+    >
+    const { ref: refFromProps, ...rest } = props
+    const { children: childContent, ...restWithoutChildren } = rest
+    void childContent
+    return React.cloneElement(child, {
+      ...restWithoutChildren,
+      ...(child.props as Record<string, unknown>),
+      className: cn(resolvedClassName, child.props?.className),
+      ref: mergeRefs(refFromProps, (child as { ref?: React.Ref<unknown> }).ref),
+    })
+  }
+
+  return <button data-slot="button" className={resolvedClassName} {...props} />
 }
 
 export { Button, buttonVariants }
