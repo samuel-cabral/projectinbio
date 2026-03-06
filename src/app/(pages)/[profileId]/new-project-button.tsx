@@ -3,7 +3,7 @@
 import { Loader, Plus, UploadIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
+import { startTransition, useRef, useState } from 'react'
 
 import { createProject } from '@/app/actions/create-project'
 import { Button } from '@/components/ui/button'
@@ -32,6 +32,7 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
   const [projectDescription, setProjectDescription] = useState('')
   const [projectUrl, setProjectUrl] = useState('')
   const [isCreatingProject, setIsCreatingProject] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   function resetForm() {
     if (projectImage) URL.revokeObjectURL(projectImage)
@@ -83,15 +84,20 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
     }
 
     const ok = await createProject(formData)
+
     setIsCreatingProject(false)
+
     if (ok) {
-      resetForm()
-      router.refresh()
+      startTransition(() => {
+        resetForm()
+        router.refresh()
+        setIsDialogOpen(false)
+      })
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
         data-profile-id={profileId}
         className="bg-accent/30 hover:border-accent flex h-[132px] w-[340px] cursor-pointer items-center justify-center gap-2 rounded-[20px] border-2 border-transparent p-3 hover:border-dashed"
