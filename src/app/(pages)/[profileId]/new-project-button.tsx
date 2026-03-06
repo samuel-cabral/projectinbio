@@ -1,7 +1,11 @@
 'use client'
 
-import { Plus, UploadIcon } from 'lucide-react'
+import { Loader, Plus, UploadIcon } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
 
+import { createProject } from '@/app/actions/create-project'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -13,12 +17,79 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { compressImage } from '@/lib/utils'
 
 type NewProjectButtonProps = {
   profileId: string
 }
 
 export function NewProjectButton({ profileId }: NewProjectButtonProps) {
+  const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const [projectImage, setProjectImage] = useState<string | null>(null)
+  const [projectTitle, setProjectTitle] = useState('')
+  const [projectDescription, setProjectDescription] = useState('')
+  const [projectUrl, setProjectUrl] = useState('')
+  const [isCreatingProject, setIsCreatingProject] = useState(false)
+
+  function resetForm() {
+    if (projectImage) URL.revokeObjectURL(projectImage)
+    setProjectImage(null)
+    setProjectTitle('')
+    setProjectDescription('')
+    setProjectUrl('')
+  }
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (projectImage) URL.revokeObjectURL(projectImage)
+    setProjectImage(URL.createObjectURL(file))
+  }
+
+  async function handleSubmit() {
+    setIsCreatingProject(true)
+    const formData = new FormData()
+
+    const title =
+      projectTitle ||
+      (document.getElementById('project-title') as HTMLInputElement | null)
+        ?.value ||
+      ''
+    const description =
+      projectDescription ||
+      (
+        document.getElementById(
+          'project-description'
+        ) as HTMLTextAreaElement | null
+      )?.value ||
+      ''
+    const url =
+      projectUrl ||
+      (document.getElementById('project-url') as HTMLInputElement | null)
+        ?.value ||
+      ''
+
+    formData.append('profileId', profileId)
+    formData.append('projectTitle', title)
+    formData.append('projectDescription', description)
+    formData.append('projectUrl', url)
+
+    const file = fileInputRef.current?.files?.[0]
+    if (file) {
+      const compressed = await compressImage(file)
+      if (compressed) formData.append('projectImage', compressed)
+    }
+
+    const ok = await createProject(formData)
+    setIsCreatingProject(false)
+    if (ok) {
+      resetForm()
+      router.refresh()
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger
@@ -35,20 +106,52 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
             Novo projeto
           </DialogTitle>
         </DialogHeader>
-        <form className="flex w-full flex-col gap-6">
+        <form
+          className="flex w-full flex-col gap-6"
+          onSubmit={e => e.preventDefault()}
+        >
+          <input
+            ref={fileInputRef}
+            id="project-image-input"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            aria-label="Imagem do projeto"
+            onChange={handleImageChange}
+          />
           <div className="flex gap-6">
-            {/* Imagem do projeto */}
-            <div className="flex flex-col items-center">
-              <div className="text-muted-foreground bg-primary-foreground mb-2 flex h-[100px] w-[100px] items-center justify-center rounded-lg text-sm font-medium">
-                100x100
+            <div className="flex flex-col items-center gap-3 text-xs">
+              <div className="bg-primary-foreground h-[100px] w-[100px] overflow-hidden rounded-xl">
+                {projectImage ? (
+                  <Image
+                    src={projectImage}
+                    alt="Preview do projeto"
+                    width={100}
+                    height={100}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="object-cover object-center hover:cursor-pointer hover:opacity-80"
+                  />
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="h-full w-full"
+                  >
+                    100x100
+                  </Button>
+                )}
               </div>
-              <label className="text-muted-foreground flex cursor-pointer items-center gap-1 text-xs hover:underline">
-                <Input type="file" className="hidden" />
+
+              <label
+                htmlFor="project-image-input"
+                className="text-muted-foreground flex cursor-pointer items-center gap-1 text-xs hover:underline"
+              >
                 <UploadIcon className="size-4" />
-                Adicionar imagem
+                <span className="text-sm">Adicionar imagem</span>
               </label>
             </div>
-            {/* Inputs do formulário */}
+
             <div className="flex flex-1 flex-col gap-4">
               <div className="flex flex-col gap-3">
                 <label htmlFor="project-title" className="text-sm font-medium">
@@ -56,10 +159,12 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
                 </label>
                 <Input
                   id="project-title"
-                  name="title"
+                  name="projectTitle"
                   type="text"
                   placeholder="Digite o nome do projeto"
                   className="border-none"
+                  value={projectTitle}
+                  onChange={e => setProjectTitle(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -71,10 +176,12 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
                 </label>
                 <Textarea
                   id="project-description"
-                  name="description"
-                  rows={3}
+                  name="projectDescription"
+                  rows={5}
                   placeholder="Dê uma breve descrição do seu projeto"
-                  className="border-none"
+                  className="min-h-[100px] border-none"
+                  value={projectDescription}
+                  onChange={e => setProjectDescription(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -83,18 +190,38 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
                 </label>
                 <Input
                   id="project-url"
-                  name="url"
+                  name="projectUrl"
                   type="url"
                   placeholder="Digite a URL do projeto"
                   className="border-none"
+                  value={projectUrl}
+                  onChange={e => setProjectUrl(e.target.value)}
                 />
               </div>
             </div>
           </div>
-          {/* Botões */}
           <div className="mt-2 flex justify-end gap-4">
-            <DialogClose>Voltar</DialogClose>
-            <Button type="submit">Salvar</Button>
+            <DialogClose
+              render={
+                <Button type="button" variant="outline" onClick={resetForm}>
+                  Cancelar
+                </Button>
+              }
+            />
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isCreatingProject}
+            >
+              {isCreatingProject ? (
+                <span className="flex items-center gap-2">
+                  <Loader className="size-4 animate-spin" />
+                  <span className="text-sm">Salvando projeto...</span>
+                </span>
+              ) : (
+                'Salvar projeto'
+              )}
+            </Button>
           </div>
         </form>
       </DialogContent>
