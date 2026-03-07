@@ -53,7 +53,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
             key={project.id}
             project={project}
             isOwner={isOwner}
-            imgUrl={await getDownloadUrlFromPath(project.imagePath)}
+            imgUrl={(await getDownloadUrlFromPath(project.imagePath)) || ''}
           />
         ))}
         {isOwner && <NewProjectButton profileId={profileId} />}
