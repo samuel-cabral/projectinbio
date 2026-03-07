@@ -1,11 +1,6 @@
 import 'server-only'
 
-import {
-  cert,
-  type Credential,
-  getApps,
-  initializeApp,
-} from 'firebase-admin/app'
+import { cert, type Credential, getApps, initializeApp } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { getStorage } from 'firebase-admin/storage'
 
@@ -48,3 +43,17 @@ initFirebase()
 export const db = getFirestore()
 
 export const storage = getStorage().bucket()
+
+export async function getDownloadUrlFromPath(path: string) {
+  if (!path) return null
+
+  const file = storage.file(path)
+
+  if (!file) return null
+
+  const [url] = await file.getSignedUrl({
+    action: 'read',
+    expires: '03-07-2500', // Não deixar expirar
+  })
+  return url
+}

@@ -7,13 +7,11 @@ import { TotalVisits } from '@/components/common/total-visits'
 import { UserCard } from '@/components/common/user-card'
 import { auth } from '@/lib/auth'
 
+import { getDownloadUrlFromPath } from '../../../lib/firebase'
 import { getProfileData } from '../../server/get-profile-data'
+import { getProfileProjects } from '../../server/get-profile-projects'
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: Promise<{ profileId: string }>
-}) {
+export default async function ProfilePage({ params }: { params: Promise<{ profileId: string }> }) {
   const { profileId } = await params
 
   const profileData = await getProfileData(profileId)
@@ -22,7 +20,7 @@ export default async function ProfilePage({
     return notFound()
   }
 
-  // TODO: get projects
+  const projects = await getProfileProjects(profileId)
 
   const session = await auth()
 
@@ -50,13 +48,14 @@ export default async function ProfilePage({
       </div>
 
       <div className="flex w-full flex-wrap content-start justify-center gap-4 overflow-y-auto">
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
-        <ProjectCard />
+        {projects.map(async project => (
+          <ProjectCard
+            key={project.id}
+            project={project}
+            isOwner={isOwner}
+            imgUrl={await getDownloadUrlFromPath(project.imagePath)}
+          />
+        ))}
         {isOwner && <NewProjectButton profileId={profileId} />}
       </div>
 
