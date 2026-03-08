@@ -55,22 +55,14 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
 
     const title =
       projectTitle ||
-      (document.getElementById('project-title') as HTMLInputElement | null)
-        ?.value ||
+      (document.getElementById('project-title') as HTMLInputElement | null)?.value ||
       ''
     const description =
       projectDescription ||
-      (
-        document.getElementById(
-          'project-description'
-        ) as HTMLTextAreaElement | null
-      )?.value ||
+      (document.getElementById('project-description') as HTMLTextAreaElement | null)?.value ||
       ''
     const url =
-      projectUrl ||
-      (document.getElementById('project-url') as HTMLInputElement | null)
-        ?.value ||
-      ''
+      projectUrl || (document.getElementById('project-url') as HTMLInputElement | null)?.value || ''
 
     formData.append('profileId', profileId)
     formData.append('projectTitle', title)
@@ -108,14 +100,9 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
 
       <DialogContent className="bg-background rounded-[20px] p-8 shadow-xl">
         <DialogHeader>
-          <DialogTitle className="mb-6 text-2xl font-bold">
-            Novo projeto
-          </DialogTitle>
+          <DialogTitle className="mb-6 text-2xl font-bold">Novo projeto</DialogTitle>
         </DialogHeader>
-        <form
-          className="flex w-full flex-col gap-6"
-          onSubmit={e => e.preventDefault()}
-        >
+        <form className="flex w-full flex-col gap-6" onSubmit={e => e.preventDefault()}>
           <input
             ref={fileInputRef}
             id="project-image-input"
@@ -174,10 +161,7 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
                 />
               </div>
               <div className="flex flex-col gap-1">
-                <label
-                  htmlFor="project-description"
-                  className="text-sm font-medium"
-                >
+                <label htmlFor="project-description" className="text-sm font-medium">
                   Descrição
                 </label>
                 <Textarea
@@ -214,11 +198,7 @@ export function NewProjectButton({ profileId }: NewProjectButtonProps) {
                 </Button>
               }
             />
-            <Button
-              type="button"
-              onClick={handleSubmit}
-              disabled={isCreatingProject}
-            >
+            <Button type="button" onClick={handleSubmit} disabled={isCreatingProject}>
               {isCreatingProject ? (
                 <span className="flex items-center gap-2">
                   <Loader className="size-4 animate-spin" />

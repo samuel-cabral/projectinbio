@@ -12,16 +12,12 @@ export function Pricing() {
   return (
     <div className="my-[150px] flex flex-col items-center gap-14">
       <div className="flex flex-col items-center gap-6">
-        <h3 className="text-4xl font-bold text-white">
-          Um valor acessível para todos
-        </h3>
+        <h3 className="text-4xl font-bold text-white">Um valor acessível para todos</h3>
 
         <p className="text-muted-foreground text-center text-xl leading-6">
-          Junte-se à comunidade de criadores e profissionais que estão já estão
-          elevando sua <br />
+          Junte-se à comunidade de criadores e profissionais que estão já estão elevando sua <br />
           presença online. Teste gratuitamente por{' '}
-          <strong className="text-pink-700">{TRIAL_DAYS} dias</strong>, sem
-          compromisso!
+          <strong className="text-pink-700">{TRIAL_DAYS} dias</strong>, sem compromisso!
         </p>
 
         <div className="flex items-end gap-9">
@@ -43,9 +39,7 @@ export function Pricing() {
 
           <div className="border-accent flex w-[304px] flex-col justify-center rounded-2xl border bg-[linear-gradient(90deg,#4B2DBB_0%,#B5446B_100%)] p-[1.6px]">
             <div className="flex h-8 items-center justify-center text-sm">
-              <span className="font-bold text-white uppercase">
-                Recomendado
-              </span>
+              <span className="font-bold text-white uppercase">Recomendado</span>
             </div>
             <div className="border-accent bg-background flex w-full flex-col gap-9 rounded-b-2xl border p-8">
               <div className="flex flex-col gap-1">

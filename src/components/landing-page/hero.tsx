@@ -1,6 +1,6 @@
 import { ProjectCard } from '../common/project-card'
 import { TotalVisits } from '../common/total-visits'
-import { UserCard } from '../common/user-card'
+import { UserCard } from '../common/user-card/user-card'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 

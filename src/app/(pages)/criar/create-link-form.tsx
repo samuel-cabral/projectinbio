@@ -55,10 +55,7 @@ export function CreateLinkForm() {
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="mt-5 flex w-full items-center gap-2"
-      >
+      <form onSubmit={handleSubmit} className="mt-5 flex w-full items-center gap-2">
         <span>projectinbio.com/</span>
         <Input
           type="text"

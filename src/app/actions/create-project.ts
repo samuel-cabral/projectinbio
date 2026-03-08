@@ -23,9 +23,7 @@ export async function createProject(formData: FormData) {
   if (!profile || profile.userId !== session.user?.id) return false
 
   const projectTitle = String(formData.get('projectTitle') ?? '').trim()
-  const projectDescription = String(
-    formData.get('projectDescription') ?? ''
-  ).trim()
+  const projectDescription = String(formData.get('projectDescription') ?? '').trim()
   const projectUrl = String(formData.get('projectUrl') ?? '').trim()
   const file = formData.get('projectImage') as File | null
 
@@ -34,9 +32,7 @@ export async function createProject(formData: FormData) {
   let imagePath: string | null = null
   const hasValidImage = file instanceof File && file.size > 0
   if (hasValidImage) {
-    const storageRef = storage.file(
-      `projects-images/${profileId}/${generatedId}`
-    )
+    const storageRef = storage.file(`projects-images/${profileId}/${generatedId}`)
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
     await storageRef.save(buffer)

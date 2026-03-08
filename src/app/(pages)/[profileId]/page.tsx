@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { NewProjectButton } from '@/app/(pages)/[profileId]/new-project-button'
 import { ProjectCard } from '@/components/common/project-card'
 import { TotalVisits } from '@/components/common/total-visits'
-import { UserCard } from '@/components/common/user-card'
+import { UserCard } from '@/components/common/user-card/user-card'
 import { auth } from '@/lib/auth'
 
 import { getDownloadUrlFromPath } from '../../../lib/firebase'

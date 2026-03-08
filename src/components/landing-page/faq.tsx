@@ -40,20 +40,12 @@ export function FAQ() {
       <div className="flex gap-3">
         <div className="flex flex-col gap-3">
           {faqItems.slice(0, Math.ceil(faqItems.length / 2)).map(item => (
-            <FAQItem
-              key={item.title}
-              title={item.title}
-              description={item.description}
-            />
+            <FAQItem key={item.title} title={item.title} description={item.description} />
           ))}
         </div>
         <div className="flex flex-col gap-3">
           {faqItems.slice(Math.ceil(faqItems.length / 2)).map(item => (
-            <FAQItem
-              key={item.title}
-              title={item.title}
-              description={item.description}
-            />
+            <FAQItem key={item.title} title={item.title} description={item.description} />
           ))}
         </div>
       </div>

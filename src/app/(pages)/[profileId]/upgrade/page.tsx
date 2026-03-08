@@ -1,10 +1,6 @@
 import { Header } from '@/components/landing-page/header'
 import { Button } from '@/components/ui/button'
-import {
-  ANNUAL_PRICE_WITH_DISCOUNT,
-  formatPriceToBRL,
-  MONTHLY_PRICE,
-} from '@/lib/config'
+import { ANNUAL_PRICE_WITH_DISCOUNT, formatPriceToBRL, MONTHLY_PRICE } from '@/lib/config'
 
 export const dynamic = 'force-dynamic'
 
