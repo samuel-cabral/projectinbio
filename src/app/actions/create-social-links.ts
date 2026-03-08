@@ -36,16 +36,16 @@ export async function createSocialLinks(input: CreateSocialLinksInput) {
   const hasAny = [github, instagram, linkedin, twitter].some(Boolean)
   if (!hasAny) return false
 
+  const socialLinks = {
+    ...(profile.socialLinks ?? {}),
+    ...(github !== undefined && { github }),
+    ...(instagram !== undefined && { instagram }),
+    ...(linkedin !== undefined && { linkedin }),
+    ...(twitter !== undefined && { twitter }),
+  }
+
   try {
-    await db
-      .collection('profiles')
-      .doc(profileId)
-      .update({
-        ...(github !== undefined && { github }),
-        ...(instagram !== undefined && { instagram }),
-        ...(linkedin !== undefined && { linkedin }),
-        ...(twitter !== undefined && { twitter }),
-      })
+    await db.collection('profiles').doc(profileId).update({ socialLinks })
     return true
   } catch (error) {
     console.error('Erro ao salvar redes sociais:', error)

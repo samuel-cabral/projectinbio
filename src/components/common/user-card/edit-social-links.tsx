@@ -5,21 +5,35 @@ import { useParams, useRouter } from 'next/navigation'
 import { startTransition, useState } from 'react'
 
 import { createSocialLinks } from '@/app/actions/create-social-links'
+import type { ProfileData } from '@/app/server/get-profile-data'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
-export function EditSocialLinks() {
+type EditSocialLinksProps = {
+  socialLinks?: ProfileData['socialLinks']
+}
+
+export function EditSocialLinks({ socialLinks }: EditSocialLinksProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAddingSocialLinks, setIsAddingSocialLinks] = useState(false)
 
   const { profileId } = useParams()
   const router = useRouter()
 
-  const [github, setGithub] = useState('')
-  const [instagram, setInstagram] = useState('')
-  const [linkedin, setLinkedin] = useState('')
-  const [twitter, setTwitter] = useState('')
+  const [github, setGithub] = useState(socialLinks?.github ?? '')
+  const [instagram, setInstagram] = useState(socialLinks?.instagram ?? '')
+  const [linkedin, setLinkedin] = useState(socialLinks?.linkedin ?? '')
+  const [twitter, setTwitter] = useState(socialLinks?.twitter ?? '')
+
+  function handleOpenModal() {
+    const links = socialLinks ?? {}
+    setGithub(links.github ?? '')
+    setInstagram(links.instagram ?? '')
+    setLinkedin(links.linkedin ?? '')
+    setTwitter(links.twitter ?? '')
+    setIsModalOpen(true)
+  }
 
   async function handleAddSocialLinks() {
     setIsAddingSocialLinks(true)
@@ -47,13 +61,14 @@ export function EditSocialLinks() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <button
-        type="button"
-        onClick={() => setIsModalOpen(true)}
-        className="rounded-xl bg-[#1E1E1E] p-3 hover:bg-[#2E2E2E]"
+      <Button
+        variant="secondary"
+        size="icon-xl"
+        className="border-secondary rounded-xl"
+        onClick={handleOpenModal}
       >
         <Plus />
-      </button>
+      </Button>
       <DialogContent className="bg-background rounded-[20px] p-8 shadow-xl">
         <DialogHeader>
           <DialogTitle className="mb-6 text-2xl font-bold">Adicionar redes sociais</DialogTitle>
