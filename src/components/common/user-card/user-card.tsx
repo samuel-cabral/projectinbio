@@ -25,29 +25,35 @@ const SOCIAL_LINKS_CONFIG: {
 
 type UserCardProps = {
   profileData: ProfileData
+  avatarUrl: string | null
   isOwner: boolean
 }
 
-export function UserCard({ profileData, isOwner }: UserCardProps) {
+export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
+  const displayName = profileData.displayName?.trim() || 'Sem nome'
+  const description = profileData.description?.trim() || ''
+  const avatarSrc = avatarUrl ?? '/me.png'
+
   return (
     <div className="border-opacity-10 flex w-[348px] flex-col items-center justify-center gap-5 rounded-3xl border bg-[#121212] p-5 text-white">
       <div className="size-48">
         <Image
-          src="/me.png"
-          alt="Samuel Cabral"
+          src={avatarSrc}
+          alt={displayName}
           className="h-full w-full rounded-full object-cover"
           width={192}
           height={192}
+          unoptimized={!!avatarUrl}
         />
       </div>
 
       <div className="flex w-full flex-col gap-2">
         <div className="flex items-center gap-2">
-          <h3 className="min-w-0 overflow-hidden text-3xl font-bold">Samuel Cabral</h3>
-          {isOwner && <EditProfile isOwner={isOwner} />}
+          <h3 className="min-w-0 overflow-hidden text-3xl font-bold">{displayName}</h3>
+          <EditProfile profileData={profileData} avatarUrl={avatarUrl} isOwner={isOwner} />
         </div>
 
-        <p className="opacity-40">&quot;Eu faço produtos para a Internet&quot;</p>
+        {description ? <p className="opacity-40">&quot;{description}&quot;</p> : null}
       </div>
 
       <div className="flex w-full flex-col gap-2">

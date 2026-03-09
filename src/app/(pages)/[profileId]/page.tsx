@@ -26,6 +26,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
 
   const isOwner = session?.user?.id === profileData.userId
 
+  const avatarUrl = profileData.avatarImagePath
+    ? await getDownloadUrlFromPath(profileData.avatarImagePath)
+    : null
+
   // TODO: add page view
 
   // TODO: if the user is not in the trial, don't let them see the projects. Redirect to the upgrade page.
@@ -44,7 +48,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
       </div>
 
       <div className="flex h-min w-1/2 justify-center">
-        <UserCard profileData={profileData} />
+        <UserCard profileData={profileData} avatarUrl={avatarUrl} isOwner={isOwner} />
       </div>
 
       <div className="flex w-full flex-wrap content-start justify-center gap-4 overflow-y-auto">

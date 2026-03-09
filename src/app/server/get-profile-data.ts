@@ -8,6 +8,9 @@ export type ProfileData = {
   userId: string
   totalVisits: number
   createdAt: number
+  displayName?: string
+  description?: string
+  avatarImagePath?: string
   socialLinks?: {
     github?: string
     instagram?: string
