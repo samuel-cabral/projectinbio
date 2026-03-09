@@ -2,6 +2,8 @@ import 'server-only'
 
 import { db } from '@/lib/firebase'
 
+import type { CreateCustomLinkItem } from '../actions/create-custom-link'
+
 export type ProfileData = {
   userId: string
   totalVisits: number
@@ -12,6 +14,7 @@ export type ProfileData = {
     linkedin?: string
     twitter?: string
   }
+  customLinks?: CreateCustomLinkItem[]
   updatedAt?: number
 }
 
@@ -23,5 +26,6 @@ export async function getProfileData(profileId: string) {
   return {
     ...data,
     socialLinks: data.socialLinks ?? {},
+    customLinks: data.customLinks ?? [],
   } as ProfileData
 }

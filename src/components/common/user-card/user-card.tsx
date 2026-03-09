@@ -1,12 +1,13 @@
 'use client'
 
-import { Github, Instagram, Linkedin, Plus, Twitter } from 'lucide-react'
+import { Github, Instagram, Linkedin, Twitter } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import type { ProfileData } from '@/app/server/get-profile-data'
+import { AddCustomLink } from '@/components/common/user-card/add-custom-link'
 import { EditSocialLinks } from '@/components/common/user-card/edit-social-links'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const SOCIAL_LINKS_CONFIG: {
@@ -72,10 +73,18 @@ export function UserCard({ profileData }: UserCardProps) {
       </div>
       <div className="flex h-[172px] w-full flex-col gap-3">
         <div className="flex w-full flex-col items-center gap-3">
-          <Button className="w-full">Template SaaS - Compre agora</Button>
-          <Button variant="secondary" size="icon-xl" className="border-secondary rounded-xl">
-            <Plus />
-          </Button>
+          {(profileData.customLinks ?? []).map((link, index) => (
+            <Link
+              key={index}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'w-full')}
+            >
+              {link.title}
+            </Link>
+          ))}
+          <AddCustomLink />
         </div>
       </div>
     </div>
