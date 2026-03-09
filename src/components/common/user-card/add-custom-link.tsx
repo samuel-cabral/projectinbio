@@ -4,28 +4,34 @@ import { Loader, Plus } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { startTransition, useState } from 'react'
 
-import { createCustomLink } from '@/app/actions/create-custom-link'
+import { createCustomLink, type CreateCustomLinkItem } from '@/app/actions/create-custom-link'
+import type { ProfileData } from '@/app/server/get-profile-data'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 
-const INITIAL_LINKS: { title: string; url: string }[] = [
-  { title: '', url: '' },
-  { title: '', url: '' },
-  { title: '', url: '' },
-]
+const MAX_SLOTS = 3
 
-export function AddCustomLink() {
+function buildLinksFromCustomLinks(customLinks?: ProfileData['customLinks']) {
+  const existing = (customLinks ?? []).map(({ title, url }) => ({ title, url }))
+  const slots = Array.from({ length: Math.max(0, MAX_SLOTS - existing.length) }, () => ({
+    title: '',
+    url: '',
+  }))
+  return [...existing, ...slots]
+}
+
+export function AddCustomLink({ customLinks }: { customLinks?: ProfileData['customLinks'] }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [links, setLinks] = useState<{ title: string; url: string }[]>(() =>
-    INITIAL_LINKS.map(() => ({ title: '', url: '' }))
+  const [links, setLinks] = useState<CreateCustomLinkItem[]>(() =>
+    buildLinksFromCustomLinks(customLinks)
   )
   const { profileId } = useParams()
   const router = useRouter()
 
   function handleOpenModal() {
-    setLinks(INITIAL_LINKS.map(() => ({ title: '', url: '' })))
+    setLinks(buildLinksFromCustomLinks(customLinks))
     setIsModalOpen(true)
   }
 
@@ -48,7 +54,7 @@ export function AddCustomLink() {
     if (ok) {
       startTransition(() => {
         setIsSaving(false)
-        setLinks(INITIAL_LINKS.map(() => ({ title: '', url: '' })))
+        setLinks(buildLinksFromCustomLinks(customLinks))
         setIsModalOpen(false)
         router.refresh()
       })

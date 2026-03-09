@@ -10,6 +10,8 @@ import { EditSocialLinks } from '@/components/common/user-card/edit-social-links
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
+import { EditProfile } from './edit-profile'
+
 const SOCIAL_LINKS_CONFIG: {
   key: keyof NonNullable<ProfileData['socialLinks']>
   Icon: typeof Github
@@ -23,9 +25,10 @@ const SOCIAL_LINKS_CONFIG: {
 
 type UserCardProps = {
   profileData: ProfileData
+  isOwner: boolean
 }
 
-export function UserCard({ profileData }: UserCardProps) {
+export function UserCard({ profileData, isOwner }: UserCardProps) {
   return (
     <div className="border-opacity-10 flex w-[348px] flex-col items-center justify-center gap-5 rounded-3xl border bg-[#121212] p-5 text-white">
       <div className="size-48">
@@ -41,6 +44,7 @@ export function UserCard({ profileData }: UserCardProps) {
       <div className="flex w-full flex-col gap-2">
         <div className="flex items-center gap-2">
           <h3 className="min-w-0 overflow-hidden text-3xl font-bold">Samuel Cabral</h3>
+          {isOwner && <EditProfile isOwner={isOwner} />}
         </div>
 
         <p className="opacity-40">&quot;Eu faço produtos para a Internet&quot;</p>
@@ -71,7 +75,7 @@ export function UserCard({ profileData }: UserCardProps) {
           <EditSocialLinks socialLinks={profileData.socialLinks} />
         </div>
       </div>
-      <div className="flex h-[172px] w-full flex-col gap-3">
+      <div className="flex min-h-[172px] w-full flex-col gap-3">
         <div className="flex w-full flex-col items-center gap-3">
           {(profileData.customLinks ?? []).map((link, index) => (
             <Link
@@ -84,7 +88,7 @@ export function UserCard({ profileData }: UserCardProps) {
               {link.title}
             </Link>
           ))}
-          <AddCustomLink />
+          <AddCustomLink customLinks={profileData.customLinks} />
         </div>
       </div>
     </div>
