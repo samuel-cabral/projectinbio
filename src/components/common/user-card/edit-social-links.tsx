@@ -12,15 +12,14 @@ import { Input } from '@/components/ui/input'
 
 type EditSocialLinksProps = {
   socialLinks?: ProfileData['socialLinks']
+  isOwner: boolean
 }
 
-export function EditSocialLinks({ socialLinks }: EditSocialLinksProps) {
+export function EditSocialLinks({ socialLinks, isOwner }: EditSocialLinksProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isAddingSocialLinks, setIsAddingSocialLinks] = useState(false)
-
   const { profileId } = useParams()
   const router = useRouter()
-
   const [github, setGithub] = useState(socialLinks?.github ?? '')
   const [instagram, setInstagram] = useState(socialLinks?.instagram ?? '')
   const [linkedin, setLinkedin] = useState(socialLinks?.linkedin ?? '')
@@ -58,6 +57,8 @@ export function EditSocialLinks({ socialLinks }: EditSocialLinksProps) {
       })
     }
   }
+
+  if (!isOwner) return null
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

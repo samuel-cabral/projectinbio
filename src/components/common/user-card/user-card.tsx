@@ -78,7 +78,7 @@ export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
               </Link>
             )
           })}
-          <EditSocialLinks socialLinks={profileData.socialLinks} />
+          <EditSocialLinks socialLinks={profileData.socialLinks} isOwner={isOwner} />
         </div>
       </div>
       <div className="flex min-h-[172px] w-full flex-col gap-3">
@@ -94,7 +94,7 @@ export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
               {link.title}
             </Link>
           ))}
-          <AddCustomLink customLinks={profileData.customLinks} />
+          <AddCustomLink customLinks={profileData.customLinks} isOwner={isOwner} />
         </div>
       </div>
     </div>

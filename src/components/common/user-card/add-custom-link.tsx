@@ -21,7 +21,12 @@ function buildLinksFromCustomLinks(customLinks?: ProfileData['customLinks']) {
   return [...existing, ...slots]
 }
 
-export function AddCustomLink({ customLinks }: { customLinks?: ProfileData['customLinks'] }) {
+type AddCustomLinkProps = {
+  customLinks?: ProfileData['customLinks']
+  isOwner: boolean
+}
+
+export function AddCustomLink({ customLinks, isOwner }: AddCustomLinkProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [links, setLinks] = useState<CreateCustomLinkItem[]>(() =>
@@ -62,6 +67,8 @@ export function AddCustomLink({ customLinks }: { customLinks?: ProfileData['cust
       setIsSaving(false)
     }
   }
+
+  if (!isOwner) return null
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
