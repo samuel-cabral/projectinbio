@@ -3,6 +3,7 @@
 import { Github, Instagram, Linkedin, Twitter } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useState } from 'react'
 
 import type { ProfileData } from '@/app/server/get-profile-data'
 import { AddCustomLink } from '@/components/common/user-card/add-custom-link'
@@ -30,9 +31,29 @@ type UserCardProps = {
 }
 
 export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
-  const displayName = profileData.displayName?.trim() || 'Sem nome'
-  const description = profileData.description?.trim() || ''
-  const avatarSrc = avatarUrl ?? '/me.png'
+  const [localDisplayName, setLocalDisplayName] = useState<string | null>(null)
+  const [localDescription, setLocalDescription] = useState<string | null>(null)
+  const [localAvatarUrl, setLocalAvatarUrl] = useState<string | null>(null)
+
+  const displayName = localDisplayName ?? (profileData.displayName?.trim() || 'Sem nome')
+  const description = localDescription ?? profileData.description?.trim() ?? ''
+  const avatarSrc = localAvatarUrl ?? avatarUrl ?? '/me.png'
+
+  function handleProfileUpdated(data: {
+    displayName: string
+    description: string
+    avatarUrl?: string | null
+  }) {
+    setLocalDisplayName(data.displayName)
+    setLocalDescription(data.description)
+    setLocalAvatarUrl(data.avatarUrl ?? null)
+  }
+
+  function handleClearOptimistic() {
+    setLocalDisplayName(null)
+    setLocalDescription(null)
+    setLocalAvatarUrl(null)
+  }
 
   return (
     <div className="border-opacity-10 flex w-[348px] flex-col items-center justify-center gap-5 rounded-3xl border bg-[#121212] p-5 text-white">
@@ -43,14 +64,20 @@ export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
           className="h-full w-full rounded-full object-cover"
           width={192}
           height={192}
-          unoptimized={!!avatarUrl}
+          unoptimized={!!(localAvatarUrl ?? avatarUrl)}
         />
       </div>
 
       <div className="flex w-full flex-col gap-2">
         <div className="flex items-center gap-2">
           <h3 className="min-w-0 overflow-hidden text-3xl font-bold">{displayName}</h3>
-          <EditProfile profileData={profileData} avatarUrl={avatarUrl} isOwner={isOwner} />
+          <EditProfile
+            profileData={profileData}
+            avatarUrl={avatarUrl}
+            isOwner={isOwner}
+            onProfileUpdated={handleProfileUpdated}
+            onClearOptimistic={handleClearOptimistic}
+          />
         </div>
 
         {description ? <p className="opacity-40">&quot;{description}&quot;</p> : null}

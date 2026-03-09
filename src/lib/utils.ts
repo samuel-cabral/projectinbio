@@ -29,3 +29,17 @@ export async function compressImage(file: File): Promise<File | null> {
     return null
   }
 }
+
+export async function compressImageForAvatar(file: File): Promise<File | null> {
+  try {
+    return await imageCompression(file, {
+      maxSizeMB: 0.2,
+      maxWidthOrHeight: 400,
+      useWebWorker: true,
+      fileType: 'image/png',
+    })
+  } catch (error) {
+    console.error('Erro ao comprimir avatar:', error)
+    return null
+  }
+}

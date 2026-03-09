@@ -11,15 +11,27 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { compressImage } from '@/lib/utils'
+import { compressImageForAvatar } from '@/lib/utils'
 
 type EditProfileProps = {
   profileData: ProfileData
   avatarUrl: string | null
   isOwner: boolean
+  onProfileUpdated?: (data: {
+    displayName: string
+    description: string
+    avatarUrl?: string | null
+  }) => void
+  onClearOptimistic?: () => void
 }
 
-export function EditProfile({ profileData, avatarUrl, isOwner }: EditProfileProps) {
+export function EditProfile({
+  profileData,
+  avatarUrl,
+  isOwner,
+  onProfileUpdated,
+  onClearOptimistic,
+}: EditProfileProps) {
   const router = useRouter()
   const { profileId } = useParams()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -31,6 +43,7 @@ export function EditProfile({ profileData, avatarUrl, isOwner }: EditProfileProp
   const [isSaving, setIsSaving] = useState(false)
 
   function handleOpenModal() {
+    onClearOptimistic?.()
     setDisplayName(profileData.displayName ?? '')
     setDescription(profileData.description ?? '')
     setPreviewImage(avatarUrl)
@@ -62,14 +75,19 @@ export function EditProfile({ profileData, avatarUrl, isOwner }: EditProfileProp
 
     const file = fileInputRef.current?.files?.[0]
     if (file) {
-      const compressed = await compressImage(file)
+      const compressed = await compressImageForAvatar(file)
       if (compressed) formData.append('profileImage', compressed)
     }
 
-    const ok = await updateProfile(formData)
+    const result = await updateProfile(formData)
     setIsSaving(false)
 
-    if (ok) {
+    if (result.ok && result.data) {
+      onProfileUpdated?.({
+        displayName: result.data.displayName,
+        description: result.data.description,
+        avatarUrl: result.data.avatarUrl ?? null,
+      })
       startTransition(() => {
         resetForm()
         setIsDialogOpen(false)
@@ -153,9 +171,9 @@ export function EditProfile({ profileData, avatarUrl, isOwner }: EditProfileProp
                 </label>
                 <Textarea
                   id="profile-description"
-                  rows={4}
+                  rows={5}
                   placeholder="Uma breve descrição sobre você"
-                  className="min-h-[80px] border-none"
+                  className="min-h-[100px] border-none"
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                 />
