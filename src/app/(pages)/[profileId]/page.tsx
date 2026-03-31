@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { NewProjectButton } from '@/app/(pages)/[profileId]/new-project-button'
+import { increaseProfileVisits } from '@/app/actions/increase-profile-visits'
 import { ProjectCard } from '@/components/common/project-card'
 import { TotalVisits } from '@/components/common/total-visits'
 import { UserCard } from '@/components/common/user-card/user-card'
@@ -30,7 +31,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
     ? await getDownloadUrlFromPath(profileData.avatarImagePath)
     : null
 
-  // TODO: add page view
+  if (!isOwner) {
+    await increaseProfileVisits(profileId)
+  }
 
   // TODO: if the user is not in the trial, don't let them see the projects. Redirect to the upgrade page.
 
@@ -63,9 +66,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
         {isOwner && <NewProjectButton profileId={profileId} />}
       </div>
 
-      <div className="absolute right-0 bottom-4 left-0 mx-auto w-min">
-        <TotalVisits />
-      </div>
+      {isOwner && (
+        <div className="absolute right-0 bottom-4 left-0 mx-auto w-min">
+          <TotalVisits totalVisits={profileData.totalVisits} />
+        </div>
+      )}
     </div>
   )
 }

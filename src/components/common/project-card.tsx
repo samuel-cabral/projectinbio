@@ -1,9 +1,9 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import router from 'next/router'
+import { useParams } from 'next/navigation'
 
+import { increaseProjectVisits } from '@/app/actions/increase-project-visits'
 import { ProjectData } from '@/app/server/get-profile-projects'
 
 type ProjectCardProps = {
@@ -16,9 +16,14 @@ export function ProjectCard({ project, isOwner, imgUrl }: ProjectCardProps) {
   const projectUrl = `${project.projectUrl}`
   const formattedProjectUrl = projectUrl.startsWith('http') ? projectUrl : `https://${projectUrl}`
 
-  function handleClick() {
-    console.log('clicked') // TODO: implement analytics click
+  const { profileId } = useParams<{ profileId: string }>()
+
+  async function handleClick() {
+    if (!isOwner && profileId && project.id) {
+      await increaseProjectVisits(profileId, project.id)
+    }
   }
+
   return (
     <Link
       href={formattedProjectUrl}
@@ -28,13 +33,7 @@ export function ProjectCard({ project, isOwner, imgUrl }: ProjectCardProps) {
     >
       <div className="size-24 flex-shrink-0 overflow-hidden rounded-md">
         {imgUrl ? (
-          <img
-            src={imgUrl}
-            alt="Projeto"
-            className="h-full w-full object-cover"
-            width={100}
-            height={100}
-          />
+          <img src={imgUrl} alt="Projeto" className="h-full w-full object-cover" />
         ) : (
           <div className="bg-muted flex size-full items-center justify-center" aria-hidden />
         )}
