@@ -1,6 +1,6 @@
 'use client'
 
-import { Github, Instagram, Linkedin, Twitter } from 'lucide-react'
+import { Github, Instagram, Linkedin, Plus, Twitter } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -8,7 +8,8 @@ import { useState } from 'react'
 import type { ProfileData } from '@/app/server/get-profile-data'
 import { AddCustomLink } from '@/components/common/user-card/add-custom-link'
 import { EditSocialLinks } from '@/components/common/user-card/edit-social-links'
-import { buttonVariants } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { MOCK_PROFILE } from '@/lib/mocks/profile'
 import { cn } from '@/lib/utils'
 
 import { EditProfile } from './edit-profile'
@@ -24,13 +25,24 @@ const SOCIAL_LINKS_CONFIG: {
   { key: 'twitter', Icon: Twitter, label: 'Twitter' },
 ]
 
+const linkStyles = cn(
+  buttonVariants({ variant: 'secondary', size: 'icon-xl' }),
+  'border-secondary rounded-xl'
+)
+
 type UserCardProps = {
-  profileData: ProfileData
-  avatarUrl: string | null
-  isOwner: boolean
+  profileData?: ProfileData
+  avatarUrl?: string | null
+  isOwner?: boolean
+  preview?: boolean
 }
 
-export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
+export function UserCard({
+  profileData = MOCK_PROFILE,
+  avatarUrl = null,
+  isOwner = false,
+  preview = false,
+}: UserCardProps) {
   const [localDisplayName, setLocalDisplayName] = useState<string | null>(null)
   const [localDescription, setLocalDescription] = useState<string | null>(null)
   const [localAvatarUrl, setLocalAvatarUrl] = useState<string | null>(null)
@@ -71,13 +83,15 @@ export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
       <div className="flex w-full flex-col gap-2">
         <div className="flex items-center gap-2">
           <h3 className="min-w-0 overflow-hidden text-3xl font-bold">{displayName}</h3>
-          <EditProfile
-            profileData={profileData}
-            avatarUrl={avatarUrl}
-            isOwner={isOwner}
-            onProfileUpdated={handleProfileUpdated}
-            onClearOptimistic={handleClearOptimistic}
-          />
+          {!preview && (
+            <EditProfile
+              profileData={profileData}
+              avatarUrl={avatarUrl}
+              isOwner={isOwner}
+              onProfileUpdated={handleProfileUpdated}
+              onClearOptimistic={handleClearOptimistic}
+            />
+          )}
         </div>
 
         {description ? <p className="opacity-40">&quot;{description}&quot;</p> : null}
@@ -88,40 +102,62 @@ export function UserCard({ profileData, avatarUrl, isOwner }: UserCardProps) {
         <div className="flex gap-3">
           {SOCIAL_LINKS_CONFIG.map(({ key, Icon, label }) => {
             const url = profileData.socialLinks?.[key]?.trim()
-            if (!url) return null
+            if (!preview && !url) return null
+
+            if (preview) {
+              return (
+                <span key={key} aria-label={label} className={linkStyles}>
+                  <Icon />
+                </span>
+              )
+            }
+
             return (
               <Link
                 key={key}
-                href={url}
+                href={url!}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className={cn(
-                  buttonVariants({ variant: 'secondary', size: 'icon-xl' }),
-                  'border-secondary rounded-xl'
-                )}
+                className={linkStyles}
               >
                 <Icon />
               </Link>
             )
           })}
-          <EditSocialLinks socialLinks={profileData.socialLinks} isOwner={isOwner} />
+
+          {preview && (
+            <Button className={linkStyles}>
+              <Plus />
+            </Button>
+          )}
+
+          {!preview && <EditSocialLinks socialLinks={profileData.socialLinks} isOwner={isOwner} />}
         </div>
       </div>
       <div className="flex min-h-[172px] w-full flex-col gap-3">
         <div className="flex w-full flex-col items-center gap-3">
-          {(profileData.customLinks ?? []).map((link, index) => (
-            <Link
-              key={index}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'w-full')}
-            >
-              {link.title}
-            </Link>
-          ))}
-          <AddCustomLink customLinks={profileData.customLinks} isOwner={isOwner} />
+          {(profileData.customLinks ?? []).map((link, index) =>
+            preview ? (
+              <span
+                key={index}
+                className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'w-full')}
+              >
+                {link.title}
+              </span>
+            ) : (
+              <Link
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'w-full')}
+              >
+                {link.title}
+              </Link>
+            )
+          )}
+          {!preview && <AddCustomLink customLinks={profileData.customLinks} isOwner={isOwner} />}
         </div>
       </div>
     </div>

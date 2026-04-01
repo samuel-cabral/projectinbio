@@ -1,3 +1,5 @@
+import { MOCK_PROFILE, MOCK_PROJECTS } from '@/lib/mocks/profile'
+
 import { ProjectCard } from '../common/project-card'
 import { TotalVisits } from '../common/total-visits'
 import { UserCard } from '../common/user-card/user-card'
@@ -30,15 +32,15 @@ export function Hero() {
 
       <div className="flex w-full items-center justify-center bg-[radial-gradient(circle_at_50%_50%,#4B2DBB,transparent_55%)]">
         <div className="relative">
-          <UserCard />
+          <UserCard preview />
           <div className="absolute -right-[45%] -bottom-[7%]">
-            <TotalVisits />
+            <TotalVisits totalVisits={MOCK_PROFILE.totalVisits} />
           </div>
           <div className="absolute top-[20%] -left-[45%] -z-10">
-            <ProjectCard />
+            <ProjectCard project={MOCK_PROJECTS[0]} isOwner={false} imgUrl="project1.png" />
           </div>
           <div className="absolute -top-[5%] -left-[55%] -z-10">
-            <ProjectCard />
+            <ProjectCard project={MOCK_PROJECTS[1]} isOwner={false} imgUrl="project2.png" />
           </div>
         </div>
       </div>
