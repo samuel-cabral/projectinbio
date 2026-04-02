@@ -4,6 +4,8 @@ import { db } from '@/lib/firebase'
 
 import type { CreateCustomLinkItem } from '../actions/create-custom-link'
 
+export type SubscriptionStatus = 'active' | 'trialing' | 'canceled' | 'past_due'
+
 export type ProfileData = {
   userId: string
   totalVisits: number
@@ -19,6 +21,10 @@ export type ProfileData = {
   }
   customLinks?: CreateCustomLinkItem[]
   updatedAt?: number
+  stripeCustomerId?: string
+  stripeSubscriptionId?: string
+  stripePriceId?: string
+  subscriptionStatus?: SubscriptionStatus
 }
 
 export async function getProfileData(profileId: string) {

@@ -5,6 +5,7 @@ Este diretório contém utilitários, configuração de serviços externos e con
 ## Módulos
 
 ### firebase.ts
+
 - Inicialização do Firebase Admin SDK (Firestore + Cloud Storage)
 - Marcado com `import 'server-only'` — **nunca importar em componentes client**
 - Exporta: `db` (Firestore), `storage` (Cloud Storage bucket), `getDownloadUrlFromPath()`
@@ -12,6 +13,7 @@ Este diretório contém utilitários, configuração de serviços externos e con
 - URLs assinadas para imagens geradas via `getDownloadUrlFromPath()`
 
 ### auth.ts / auth.config.ts
+
 - NextAuth v5 (beta) com Google OAuth provider
 - Adapter: `@auth/firebase-adapter` (sessões no Firestore)
 - Estratégia de sessão: JWT
@@ -19,15 +21,18 @@ Este diretório contém utilitários, configuração de serviços externos e con
 - Exporta: `handlers`, `auth`, `signIn`, `signOut`
 
 ### utils.ts
+
 - `cn()` — merge de classes Tailwind (clsx + tailwind-merge)
 - `sanitizeLink()` — normaliza texto para URL-safe slug (remove acentos, caracteres especiais, lowercase)
 - `compressImage()` / `compressImageForAvatar()` — compressão client-side com `browser-image-compression` (max 0.2MB). **Apenas para uso em componentes client**
 
 ### config.ts
+
 - Constantes de pricing em BRL: `TRIAL_DAYS`, `MONTHLY_PRICE`, `ANNUAL_PRICE_WITH_DISCOUNT`
 - Helpers: `calculateDiscountPercentage()`, `formatPriceToBRL()`
 
 ### mocks/
+
 - Dados mock (`MOCK_PROFILE`, `MOCK_PROJECTS`) para preview na landing page
 - Seguem os tipos `ProfileData` e `ProjectData` definidos em `@/app/server/`
 

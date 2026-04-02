@@ -27,7 +27,10 @@ export async function createCustomLink(input: CreateCustomLinkInput) {
   if (!profile || profile.userId !== session.user?.id) return false
 
   const validLinks = input.links
-    .map(({ title, url }) => ({ title: title?.trim() ?? '', url: url?.trim() ?? '' }))
+    .map(({ title, url }) => ({
+      title: title?.trim() ?? '',
+      url: url?.trim() ?? '',
+    }))
     .filter(({ title, url }) => title !== '' && url !== '')
     .slice(0, MAX_CUSTOM_LINKS)
 

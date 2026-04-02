@@ -8,14 +8,16 @@ ProjectInBio is a Brazilian Portuguese ("pt-BR") link-in-bio platform where user
 
 ## Commands
 
+Package manager: **pnpm**
+
 ```bash
-npm run dev          # Start dev server
-npm run build        # Production build
-npm run lint         # ESLint check
-npm run lint:fix     # ESLint auto-fix
-npm run type-check   # TypeScript type checking (tsc --noEmit)
-npm run format       # Prettier format all files
-npm run format:check # Prettier check formatting
+pnpm dev             # Start dev server
+pnpm build           # Production build
+pnpm lint            # ESLint check
+pnpm lint:fix        # ESLint auto-fix
+pnpm type-check      # TypeScript type checking (tsc --noEmit)
+pnpm format          # Prettier format all files
+pnpm format:check    # Prettier check formatting
 ```
 
 ## Architecture
@@ -52,11 +54,16 @@ npm run format:check # Prettier check formatting
 ```
 FIREBASE_PROJECT_ID
 FIREBASE_CLIENT_EMAIL
-FIREBASE_PRIVATE_KEY_BASE64    # Base64-encoded Firebase private key
+FIREBASE_PRIVATE_KEY_BASE64          # Base64-encoded Firebase private key
 FIREBASE_STORAGE_BUCKET
-AUTH_SECRET                     # NextAuth JWT secret
-AUTH_GOOGLE_ID                  # Google OAuth client ID
-AUTH_GOOGLE_SECRET              # Google OAuth client secret
+AUTH_SECRET                           # NextAuth JWT secret
+AUTH_GOOGLE_ID                        # Google OAuth client ID
+AUTH_GOOGLE_SECRET                    # Google OAuth client secret
+STRIPE_SECRET_KEY                     # Stripe secret key (sk_test_*)
+STRIPE_WEBHOOK_SECRET                 # Stripe webhook signing secret (whsec_*)
+NEXT_PUBLIC_STRIPE_PUB_KEY            # Stripe publishable key (pk_test_*)
+NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID   # Stripe Price ID for monthly plan
+NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID    # Stripe Price ID for annual plan
 ```
 
 ## Lint & Format Rules

@@ -8,7 +8,10 @@ import { getProfileData } from '../server/get-profile-data'
 const AVATAR_PATH_PREFIX = 'profile-images/'
 
 export type UpdateProfileResult =
-  | { ok: true; data: { displayName: string; description: string; avatarUrl?: string } }
+  | {
+      ok: true
+      data: { displayName: string; description: string; avatarUrl?: string }
+    }
   | { ok: false }
 
 export async function updateProfile(formData: FormData): Promise<UpdateProfileResult> {

@@ -35,20 +35,23 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
     await increaseProfileVisits(profileId)
   }
 
-  // TODO: if the user is not in the trial, don't let them see the projects. Redirect to the upgrade page.
+  const hasActiveSubscription =
+    profileData.subscriptionStatus === 'active' || profileData.subscriptionStatus === 'trialing'
 
   return (
     <div className="relative flex h-screen overflow-hidden p-20">
-      <div className="bg-card text-foreground fixed top-0 left-0 flex w-full justify-center gap-1 py-2">
-        <span>Você está usando a versão trial.</span>
-        <Link href={`/${profileId}/upgrade`}>
-          <button className="flex items-center gap-1">
-            <span className="text-chart-2 cursor-pointer font-bold hover:underline">
-              Faça o upgrade agora!
-            </span>
-          </button>
-        </Link>
-      </div>
+      {isOwner && !hasActiveSubscription && (
+        <div className="bg-card text-foreground fixed top-0 left-0 flex w-full justify-center gap-1 py-2">
+          <span>Você está usando a versão trial.</span>
+          <Link href={`/${profileId}/upgrade`}>
+            <button className="flex items-center gap-1">
+              <span className="text-chart-2 cursor-pointer font-bold hover:underline">
+                Faça o upgrade agora!
+              </span>
+            </button>
+          </Link>
+        </div>
+      )}
 
       <div className="flex h-min w-1/2 justify-center">
         <UserCard profileData={profileData} avatarUrl={avatarUrl} isOwner={isOwner} />

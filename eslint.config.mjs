@@ -11,7 +11,7 @@ const __dirname = dirname(__filename)
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended
+  recommendedConfig: js.configs.recommended,
 })
 
 const eslintConfig = [
@@ -21,7 +21,7 @@ const eslintConfig = [
     plugins: {
       prettier: eslintPluginPrettier,
       'simple-import-sort': simpleImportSort,
-      'react-hooks': reactHooksPlugin
+      'react-hooks': reactHooksPlugin,
     },
     languageOptions: {
       parserOptions: {
@@ -30,9 +30,9 @@ const eslintConfig = [
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: {
-          jsx: true
-        }
-      }
+          jsx: true,
+        },
+      },
     },
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
@@ -60,10 +60,10 @@ const eslintConfig = [
           printWidth: 100,
           bracketSpacing: true,
           arrowParens: 'avoid',
-          endOfLine: 'lf'
-        }
-      ]
-    }
+          endOfLine: 'lf',
+        },
+      ],
+    },
   },
   {
     ignores: [
@@ -74,9 +74,9 @@ const eslintConfig = [
       'next-env.d.ts',
       '*.config.js',
       '*.config.mjs',
-      '*.config.ts'
-    ]
-  }
+      '*.config.ts',
+    ],
+  },
 ]
 
 export default eslintConfig

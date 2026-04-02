@@ -13,7 +13,10 @@ import { Input } from '@/components/ui/input'
 const MAX_SLOTS = 3
 
 function buildLinksFromCustomLinks(customLinks?: ProfileData['customLinks']) {
-  const existing = (customLinks ?? []).map(({ title, url }) => ({ title, url }))
+  const existing = (customLinks ?? []).map(({ title, url }) => ({
+    title,
+    url,
+  }))
   const slots = Array.from({ length: Math.max(0, MAX_SLOTS - existing.length) }, () => ({
     title: '',
     url: '',
@@ -54,7 +57,10 @@ export function AddCustomLink({ customLinks, isOwner }: AddCustomLinkProps) {
       .map(({ title, url }) => ({ title: title.trim(), url: url.trim() }))
       .filter(({ title, url }) => title !== '' && url !== '')
 
-    const ok = await createCustomLink({ profileId: String(profileId), links: validLinks })
+    const ok = await createCustomLink({
+      profileId: String(profileId),
+      links: validLinks,
+    })
 
     if (ok) {
       startTransition(() => {

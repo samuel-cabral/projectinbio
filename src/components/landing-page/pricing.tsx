@@ -1,7 +1,7 @@
+import Link from 'next/link'
+
 import {
   ANNUAL_PRICE_WITH_DISCOUNT,
-  ANNUAL_PRICE_WITHOUT_DISCOUNT,
-  calculateDiscountPercentage,
   formatPriceToBRL,
   MONTHLY_PRICE,
   TRIAL_DAYS,
@@ -32,9 +32,11 @@ export function Pricing() {
               </span>
               <span className="text-muted-foreground text-xl">/mês</span>
             </div>
-            <Button variant="secondary" className="max-w-20">
-              Assinar
-            </Button>
+            <Link href="/criar">
+              <Button variant="secondary" className="max-w-20">
+                Assinar
+              </Button>
+            </Link>
           </div>
 
           <div className="border-accent flex w-[304px] flex-col justify-center rounded-2xl border bg-[linear-gradient(90deg,#4B2DBB_0%,#B5446B_100%)] p-[1.6px]">
@@ -51,7 +53,9 @@ export function Pricing() {
                   {formatPriceToBRL(ANNUAL_PRICE_WITH_DISCOUNT)}
                 </span>
               </div>
-              <Button className="max-w-min">Assinar</Button>
+              <Link href="/criar">
+                <Button className="max-w-min">Assinar</Button>
+              </Link>
             </div>
           </div>
         </div>

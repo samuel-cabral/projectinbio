@@ -11,10 +11,11 @@ Este diretório contém as páginas e rotas do App Router.
 
 ## Convenções
 
-- **Pages são Server Components por padrão** — funções `async` que buscam dados diretamente
+- **Pages (`page.tsx`) são SEMPRE Server Components** — nunca usar `'use client'` em arquivos `page.tsx`. Isso é um antipattern pois impede data fetching server-side, `auth()`, metadata estática e streaming/SSR otimizado
+- Extrair partes interativas em componentes client co-localizados (ex: `upgrade/checkout-buttons.tsx`, `criar/create-link-form.tsx`)
 - Buscar dados com funções de `@/app/server/` e sessão com `auth()` de `@/lib/auth`
 - Executar mutações via server actions de `@/app/actions/`
-- Usar `'use client'` apenas em componentes interativos (forms, dialogs, botões com estado)
+- Usar `'use client'` apenas nos componentes interativos (forms, dialogs, botões com estado)
 - Componentes client dentro de pages usam `useRouter().refresh()` + `startTransition()` para atualização otimista após mutações
 - Uploads de arquivo via `FormData`
 - Todos os textos de UI devem ser em **português (pt-BR)**
