@@ -9,15 +9,16 @@ export async function POST(request: Request) {
   const body = await request.text()
   const headersList = await headers()
   const signature = headersList.get('stripe-signature')
+  const secret = process.env.STRIPE_WEBHOOK_SECRET!
 
-  if (!signature) {
-    return NextResponse.json({ error: 'Assinatura ausente' }, { status: 400 })
+  if (!signature || !secret) {
+    return NextResponse.json({ error: 'Assinatura ou secret ausente' }, { status: 400 })
   }
 
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
+    event = stripe.webhooks.constructEvent(body, signature, secret)
   } catch (error) {
     console.error('Erro na verificação do webhook:', error)
     return NextResponse.json({ error: 'Assinatura inválida' }, { status: 400 })
@@ -52,6 +53,30 @@ export async function POST(request: Request) {
             subscriptionStatus: 'active',
           })
       }
+      break
+    }
+
+    case 'checkout.session.async_payment_succeeded': {
+      // boleto pago
+      const session = event.data.object as Stripe.Checkout.Session
+      const profileId = session.metadata?.profileId
+      if (!profileId) break
+
+      await db.collection('profiles').doc(profileId).update({
+        subscriptionStatus: 'active',
+      })
+      break
+    }
+
+    case 'checkout.session.async_payment_failed': {
+      // boleto expirado ou pagamento falhou
+      const session = event.data.object as Stripe.Checkout.Session
+      const profileId = session.metadata?.profileId
+      if (!profileId) break
+
+      await db.collection('profiles').doc(profileId).update({
+        subscriptionStatus: 'canceled',
+      })
       break
     }
 

@@ -45,7 +45,13 @@ export async function POST(request: Request) {
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
       mode: isSubscription ? 'subscription' : 'payment',
+      payment_method_types: ['card', 'boleto'],
       line_items: [{ price: priceId, quantity: 1 }],
+      payment_method_options: {
+        boleto: {
+          expires_after_days: 3,
+        },
+      },
       success_url: `${origin}/${profileId}?checkout=success`,
       cancel_url: `${origin}/${profileId}/upgrade`,
       metadata: { profileId, userId: session.user.id },
