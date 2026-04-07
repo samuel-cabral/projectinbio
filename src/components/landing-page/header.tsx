@@ -1,5 +1,7 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
+import { getProfileIdByUserId } from '@/app/server/get-profile-data'
 import { auth } from '@/lib/auth'
 
 import { manageAuth } from '../../app/actions/manage-auth'
@@ -7,6 +9,11 @@ import { Button } from '../ui/button'
 
 export async function Header() {
   const session = await auth()
+
+  let profileId: string | undefined
+  if (session?.user?.id) {
+    profileId = await getProfileIdByUserId(session.user.id)
+  }
 
   return (
     <div className="absolute top-0 right-0 left-0 mx-auto flex max-w-7xl items-center justify-between py-10">
@@ -16,9 +23,14 @@ export async function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        {session && <Button>Minha Página</Button>}
+        {session && (
+          <Link href={profileId ? `/${profileId}` : '/criar'}>
+            <Button>Minha Página</Button>
+          </Link>
+        )}
+
         <form action={manageAuth}>
-          <Button>{!session ? 'Login' : 'Sair'}</Button>
+          <Button type="submit">{!session ? 'Login' : 'Sair'}</Button>
         </form>
       </div>
     </div>

@@ -27,6 +27,13 @@ export type ProfileData = {
   subscriptionStatus?: SubscriptionStatus
 }
 
+export async function getProfileIdByUserId(userId: string) {
+  const snapshot = await db.collection('profiles').where('userId', '==', userId).limit(1).get()
+
+  if (snapshot.empty) return undefined
+  return snapshot.docs[0].id
+}
+
 export async function getProfileData(profileId: string) {
   const snapshot = await db.collection('profiles').doc(profileId).get()
   const data = snapshot.data()

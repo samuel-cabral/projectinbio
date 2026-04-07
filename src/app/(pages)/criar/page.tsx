@@ -1,12 +1,23 @@
 import { Rocket } from 'lucide-react'
+import { redirect } from 'next/navigation'
 
+import { getProfileIdByUserId } from '@/app/server/get-profile-data'
 import { Header } from '@/components/landing-page/header'
+import { auth } from '@/lib/auth'
 
 import { CreateLinkForm } from './create-link-form'
 
 export const dynamic = 'force-dynamic'
 
-export default function CriarPage() {
+export default async function CriarPage() {
+  const session = await auth()
+
+  if (session?.user?.id) {
+    const profileId = await getProfileIdByUserId(session.user.id)
+    if (profileId) {
+      redirect(`/${profileId}`)
+    }
+  }
   return (
     <div>
       <Header />

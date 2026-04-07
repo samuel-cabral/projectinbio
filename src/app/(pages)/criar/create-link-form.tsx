@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,8 @@ import { verifyLink } from '../../actions/verify-link'
 
 export function CreateLinkForm() {
   const router = useRouter()
-  const [link, setLink] = useState('')
+  const searchParams = useSearchParams()
+  const [link, setLink] = useState(searchParams.get('link') ?? '')
   const [error, setError] = useState('')
 
   function handleLinkChange(e: React.ChangeEvent<HTMLInputElement>) {

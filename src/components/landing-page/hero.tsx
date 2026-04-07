@@ -3,8 +3,7 @@ import { MOCK_PROFILE, MOCK_PROJECTS } from '@/lib/mocks/profile'
 import { ProjectCard } from '../common/project-card'
 import { TotalVisits } from '../common/total-visits'
 import { UserCard } from '../common/user-card/user-card'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
+import { HeroLinkInput } from './hero-link-input'
 
 export function Hero() {
   return (
@@ -19,15 +18,7 @@ export function Hero() {
           Acompanhe o engajamento com Analytics de clicks.
         </h2>
 
-        <div className="mt-[10vh] flex w-full items-center gap-2">
-          <span className="text-xl text-white">projectinbio.com/</span>
-          <Input
-            type="text"
-            placeholder="Seu link"
-            className="border-background bg-background h-12"
-          />
-          <Button className="h-12">Criar agora</Button>
-        </div>
+        <HeroLinkInput />
       </div>
 
       <div className="flex w-full items-center justify-center bg-[radial-gradient(circle_at_50%_50%,#4B2DBB,transparent_55%)]">
