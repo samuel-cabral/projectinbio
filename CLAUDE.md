@@ -66,6 +66,11 @@ NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID   # Stripe Price ID for monthly plan
 NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID    # Stripe Price ID for annual plan
 ```
 
+## Git Conventions
+
+- Never add `Co-Authored-By` trailers to commit messages
+- Use conventional commits format (e.g., `feat:`, `fix:`, `refactor:`)
+
 ## Lint & Format Rules
 
 - ESLint: `next/core-web-vitals`, `next/typescript`, `prettier` integration
