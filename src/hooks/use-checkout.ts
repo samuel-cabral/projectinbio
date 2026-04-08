@@ -5,6 +5,27 @@ import { useCallback, useState } from 'react'
 export function useCheckout() {
   const [isLoading, setIsLoading] = useState(false)
 
+  const handleCreateStripePortal = useCallback(async () => {
+    try {
+      const response = await fetch('/api/stripe/create-portal', {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        console.error('Erro no portal:', response.status, await response.text())
+        return
+      }
+
+      const data = await response.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('Erro ao abrir portal:', error)
+    }
+  }, [])
+
   const checkout = useCallback(async (priceId: string, profileId: string) => {
     setIsLoading(true)
 
@@ -32,5 +53,5 @@ export function useCheckout() {
     }
   }, [])
 
-  return { checkout, isLoading }
+  return { checkout, handleCreateStripePortal, isLoading }
 }
