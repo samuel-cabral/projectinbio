@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
@@ -14,7 +14,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@auth/firebase-adapter": "^2.7.4",
+    "@auth/firebase-adapter": "^2.11.0",
     "@base-ui/react": "^1.2.0",
     "@stripe/stripe-js": "^9.0.1",
     "@types/socket.io-client": "^3.0.0",

@@ -1,29 +1,32 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { heroCreate } from '@/app/actions/hero-create'
 import { sanitizeLink } from '@/lib/utils'
 
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 
 export function HeroLinkInput() {
-  const router = useRouter()
   const [link, setLink] = useState('')
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setLink(sanitizeLink(e.target.value))
   }
 
-  function handleCreate() {
-    const target = link ? `/criar?link=${link}` : '/criar'
-    router.push(target)
+  function handleSubmit() {
+    if (link) localStorage.setItem('pendingLink', link)
   }
 
   return (
-    <div className="mt-[10vh] flex w-full items-center gap-2">
+    <form
+      action={heroCreate}
+      onSubmit={handleSubmit}
+      className="mt-[10vh] flex w-full items-center gap-2"
+    >
       <span className="text-xl text-white">projectinbio.com/</span>
+      <input type="hidden" name="link" value={link} />
       <Input
         type="text"
         placeholder="Seu link"
@@ -31,9 +34,9 @@ export function HeroLinkInput() {
         value={link}
         onChange={handleChange}
       />
-      <Button className="h-12" onClick={handleCreate}>
+      <Button type="submit" className="h-12">
         Criar agora
       </Button>
-    </div>
+    </form>
   )
 }

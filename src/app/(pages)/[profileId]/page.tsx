@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 import { NewProjectButton } from '@/app/(pages)/[profileId]/new-project-button'
 import { increaseProfileVisits } from '@/app/actions/increase-profile-visits'
@@ -38,9 +38,13 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
   const hasActiveSubscription =
     profileData.subscriptionStatus === 'active' || profileData.subscriptionStatus === 'trialing'
 
+  if (isOwner && !session?.user?.isTrial && !hasActiveSubscription) {
+    redirect(`/${profileId}/upgrade`)
+  }
+
   return (
     <div className="relative flex h-screen overflow-hidden p-20">
-      {isOwner && !hasActiveSubscription && (
+      {isOwner && session?.user?.isTrial && !hasActiveSubscription && (
         <div className="bg-card text-foreground fixed top-0 left-0 flex w-full justify-center gap-1 py-2">
           <span>Você está usando a versão trial.</span>
           <Link href={`/${profileId}/upgrade`}>

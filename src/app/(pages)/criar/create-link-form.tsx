@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,16 @@ export function CreateLinkForm() {
   const searchParams = useSearchParams()
   const [link, setLink] = useState(searchParams.get('link') ?? '')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!link) {
+      const pendingLink = localStorage.getItem('pendingLink')
+      if (pendingLink) {
+        setLink(pendingLink)
+        localStorage.removeItem('pendingLink')
+      }
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleLinkChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
