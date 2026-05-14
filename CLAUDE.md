@@ -24,22 +24,35 @@ pnpm format:check    # Prettier check formatting
 
 **Next.js 15 App Router** with Server Components by default and Server Actions for mutations.
 
-- `src/app/actions/` — Server Actions (`'use server'`): all write operations (create project, update profile, manage links, track visits)
-- `src/app/server/` — Server-side read-only data fetching functions
-- `src/app/(pages)/` — Route group: landing page (`page.tsx`), profile pages (`[profileId]/`), link creation (`criar/`)
-- `src/app/api/auth/` — NextAuth API route handler
-- `src/components/ui/` — shadcn/ui base components (button, dialog, input, textarea)
-- `src/components/common/` — Feature components (project cards, user card with edit dialogs, visit counters)
-- `src/components/landing-page/` — Landing page sections
-- `src/lib/` — Auth config, Firebase admin init, utilities, app constants
+- `src/app/actions/` — Server Actions (`'use server'`): all write operations (create project, update profile, manage links, track visits) — see [src/app/actions/CLAUDE.md](src/app/actions/CLAUDE.md)
+- `src/app/server/` — Server-side read-only data fetching functions — see [src/app/server/CLAUDE.md](src/app/server/CLAUDE.md)
+- `src/app/(pages)/` — Route group: landing page (`page.tsx`), profile pages (`[profileId]/`), link creation (`criar/`), upgrade flow (`[profileId]/upgrade/`) — see [src/app/(pages)/CLAUDE.md](src/app/(pages)/CLAUDE.md)
+- `src/app/api/` — Route Handlers: NextAuth + Stripe checkout/portal/webhook — see [src/app/api/CLAUDE.md](src/app/api/CLAUDE.md)
+- `src/components/` — UI primitives, common feature components, landing-page sections — see [src/components/CLAUDE.md](src/components/CLAUDE.md)
+- `src/hooks/` — Client-side React hooks — see [src/hooks/CLAUDE.md](src/hooks/CLAUDE.md)
+- `src/lib/` — Auth config, Firebase admin init, Stripe init, utilities, app constants — see [src/lib/CLAUDE.md](src/lib/CLAUDE.md)
+- `src/middleware.ts` — NextAuth-backed middleware protecting `/criar` and `/:profileId`
+- `src/types/` — Ambient type declarations (NextAuth session augmentation)
 
-**Auth**: NextAuth v5 (beta) with Google OAuth provider and `@auth/firebase-adapter`. JWT session strategy. Middleware protects `/criar` and `/:profileId` routes.
+**Auth**: NextAuth v5 (beta) with Google OAuth provider and `@auth/firebase-adapter`. JWT session strategy. Middleware (`src/middleware.ts`) protects `/criar` and `/:profileId` routes. Session is extended with `user.id` and `user.isTrial` — see `src/types/next-auth.d.ts`.
 
 **Database**: Firestore (NoSQL). Collections: `profiles/{profileId}` with subcollection `projects/{projectId}`. No ORM — direct Firebase Admin SDK calls.
 
 **Storage**: Firebase Cloud Storage for images (avatars, project images). Images compressed client-side before upload (max 0.2MB, 900px for projects, 400px for avatars).
 
-**Styling**: Tailwind CSS 4 with `cn()` utility (clsx + tailwind-merge). Dark mode via `next-themes`.
+**Payments**: Stripe Checkout (card + boleto) + Billing Portal. Webhook syncs subscription state into `profiles/{profileId}` (`subscriptionStatus`, `stripeCustomerId`, `stripeSubscriptionId`, `stripePriceId`). Access gate in `[profileId]/page.tsx`: owners without active subscription (and not in trial) are redirected to `/upgrade`.
+
+**Styling**: Tailwind CSS 4 with `cn()` utility (clsx + tailwind-merge). Dark mode via `next-themes` (atualmente o `<body>` é forçado para `dark` em `layout.tsx`).
+
+## Language
+
+- UI text and user-facing strings: **Portuguese (pt-BR)**
+- Code, identifiers, and commit messages: English (except domain terms já em português, como `criar`, `perfil`)
+- CLAUDE.md files: Portuguese is acceptable since the audience is the project team
+
+## Subdirectory CLAUDE.md files
+
+Most subdirectories ship a CLAUDE.md with conventions specific to that layer. **Read the relevant subdirectory CLAUDE.md before adding or modifying code** in that area — they contain the obligatory templates (e.g., the `'use server'` skeleton for actions, the webhook signature flow for Stripe).
 
 ## Key Patterns
 
