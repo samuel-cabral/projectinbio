@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
@@ -32,9 +33,16 @@ export function ProjectCard({ project, isOwner, imgUrl, viewerUserId }: ProjectC
       className="bg-accent/30 hover:border-accent flex h-[132px] w-[340px] cursor-pointer gap-5 rounded-[20px] border-2 border-transparent p-3 no-underline"
       onClick={handleClick}
     >
-      <div className="size-24 flex-shrink-0 overflow-hidden rounded-md">
+      <div className="relative size-24 flex-shrink-0 overflow-hidden rounded-md">
         {imgUrl ? (
-          <img src={imgUrl} alt="Projeto" className="h-full w-full object-cover" />
+          <Image
+            src={imgUrl}
+            alt="Projeto"
+            fill
+            sizes="96px"
+            unoptimized={imgUrl.startsWith('http')}
+            className="object-cover"
+          />
         ) : (
           <div className="bg-muted flex size-full items-center justify-center" aria-hidden />
         )}
