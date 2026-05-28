@@ -41,6 +41,7 @@ export async function POST(request: Request) {
 - **Sempre retornar 200** após processar (ou erro 400 se a assinatura for inválida). Retornar 500 faz o Stripe reenviar o evento
 - **`profileId` vem de `metadata`** (`session.metadata?.profileId` ou `subscription.metadata?.profileId`) — sempre passar `profileId` no `metadata` ao criar sessões/assinaturas no Stripe
 - Eventos suportados atualmente: `checkout.session.completed`, `checkout.session.async_payment_succeeded/failed`, `customer.subscription.updated`, `customer.subscription.deleted`
+- **E-mail do boleto**: em `checkout.session.completed` com `payment_status === 'unpaid'` e `payment_intent` (boleto de pagamento único), busca `next_action.boleto_display_details.hosted_voucher_url` no PaymentIntent e envia o link por e-mail via `sendEmail` de `@/lib/resend`, dentro de `after()` (latência zero; `sendEmail` nunca lança)
 - Estado da assinatura é refletido em `profiles/{profileId}.subscriptionStatus` — usado para gate de acesso em `[profileId]/page.tsx`
 
 ## Campos Stripe no documento `profiles/{profileId}`

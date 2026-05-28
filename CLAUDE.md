@@ -81,6 +81,7 @@ NEXT_PUBLIC_GA_MEASUREMENT_ID         # GA4 measurement ID (G-XXXXXXXXXX)
 NEXT_PUBLIC_MIXPANEL_TOKEN            # Mixpanel project token (client SDK)
 MIXPANEL_TOKEN                        # Mixpanel project token (server SDK; mesmo valor do NEXT_PUBLIC_*)
 GA_API_SECRET                         # GA4 Measurement Protocol API secret (server-only)
+RESEND_API_KEY                        # Resend API key (re_*) — envio de e-mails server-side
 ```
 
 ## Git Conventions

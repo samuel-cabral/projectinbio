@@ -26,6 +26,14 @@ Este diretório contém utilitários, configuração de serviços externos e con
 - `sanitizeLink()` — normaliza texto para URL-safe slug (remove acentos, caracteres especiais, lowercase)
 - `compressImage()` / `compressImageForAvatar()` — compressão client-side com `browser-image-compression` (max 0.2MB). **Apenas para uso em componentes client**
 
+### resend.ts
+
+- Cliente Resend para envio de e-mails server-side
+- Marcado com `import 'server-only'` — singleton lazy, **no-op silencioso** se `RESEND_API_KEY` ausente (mesmo padrão de `firebase.ts`/analytics)
+- Exporta `sendEmail({ to, subject, html, text?, from? })` — **nunca lança**: trata `{ data, error }` da Resend e loga falhas sem quebrar o fluxo do chamador
+- `from` default é o remetente de teste `onboarding@resend.dev` (trocar por domínio verificado ao configurar DNS)
+- Usado no webhook do Stripe para enviar o link do boleto (`api/stripe/webhook/route.ts`)
+
 ### config.ts
 
 - Constantes de pricing em BRL: `TRIAL_DAYS`, `MONTHLY_PRICE`, `ANNUAL_PRICE_WITH_DISCOUNT`

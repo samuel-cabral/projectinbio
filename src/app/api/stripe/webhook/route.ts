@@ -4,6 +4,7 @@ import type Stripe from 'stripe'
 
 import { EVENTS, identifyServer, trackServer } from '@/lib/analytics'
 import { db } from '@/lib/firebase'
+import { sendEmail } from '@/lib/resend'
 import { stripe } from '@/lib/stripe'
 
 type StripeMetadata = { profileId?: string; userId?: string }
@@ -96,6 +97,42 @@ export async function POST(request: Request) {
               { userId, profileId, method: 'card', amountBrl },
               { userId }
             )
+          })
+        }
+      } else if (session.payment_status === 'unpaid' && session.payment_intent) {
+        // Só chega aqui em pagamento único com boleto: sem `subscriptionId` (cai
+        // do `if` acima) e ainda não pago. O voucher já foi gerado — enviamos o
+        // link por e-mail para o cliente concluir o pagamento.
+        const customerEmail = session.customer_details?.email
+        const paymentIntentId =
+          typeof session.payment_intent === 'string'
+            ? session.payment_intent
+            : session.payment_intent.id
+
+        if (customerEmail) {
+          after(async () => {
+            try {
+              const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+              const voucherUrl =
+                paymentIntent.next_action?.boleto_display_details?.hosted_voucher_url
+              if (!voucherUrl) {
+                // Esperamos sempre um voucher de boleto aqui; ausência indica
+                // mudança no método/config do checkout — logar para investigar.
+                console.warn('[boleto] PaymentIntent sem voucher URL', {
+                  paymentIntentId,
+                  nextAction: paymentIntent.next_action?.type,
+                })
+                return
+              }
+              await sendEmail({
+                to: customerEmail,
+                subject: 'Seu boleto para pagamento',
+                html: `<p>Olá! Aqui está o seu boleto para concluir a compra no ProjectInBio.</p><p><a href="${voucherUrl}">Visualizar e pagar o boleto</a></p><p>O boleto expira em 3 dias.</p>`,
+                text: `Aqui está o seu boleto para pagamento: ${voucherUrl} (expira em 3 dias)`,
+              })
+            } catch (error) {
+              console.error('Erro ao enviar e-mail do boleto:', error)
+            }
           })
         }
       }
