@@ -1,5 +1,9 @@
 'use server'
 
+import { after } from 'next/server'
+
+import { EVENTS, trackServer } from '@/lib/analytics'
+import type { ProfileUpdateField } from '@/lib/analytics/events'
 import { auth } from '@/lib/auth'
 import { db, getDownloadUrlFromPath, storage } from '@/lib/firebase'
 
@@ -16,13 +20,13 @@ export type UpdateProfileResult =
 
 export async function updateProfile(formData: FormData): Promise<UpdateProfileResult> {
   const session = await auth()
-  if (!session) return { ok: false }
+  if (!session?.user?.id) return { ok: false }
 
   const profileId = (formData.get('profileId') as string)?.trim()
   if (!profileId) return { ok: false }
 
   const profile = await getProfileData(profileId)
-  if (!profile || profile.userId !== session.user?.id) return { ok: false }
+  if (!profile || profile.userId !== session.user.id) return { ok: false }
 
   const displayName = String(formData.get('displayName') ?? '').trim()
   const description = String(formData.get('description') ?? '').trim()
@@ -65,6 +69,16 @@ export async function updateProfile(formData: FormData): Promise<UpdateProfileRe
     if (avatarImagePath) {
       const url = await getDownloadUrlFromPath(avatarImagePath)
       if (url) avatarUrl = url
+    }
+
+    const changed: ProfileUpdateField[] = []
+    if (displayName !== (profile.displayName ?? '').trim()) changed.push('displayName')
+    if (description !== (profile.description ?? '').trim()) changed.push('description')
+    if (hasValidImage) changed.push('avatar')
+
+    if (changed.length > 0) {
+      const userId = session.user.id
+      after(() => trackServer(EVENTS.PROFILE_UPDATED, { userId, profileId, changed }, { userId }))
     }
 
     return {

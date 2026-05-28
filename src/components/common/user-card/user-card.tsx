@@ -2,12 +2,12 @@
 
 import { Github, Instagram, Linkedin, Plus, Twitter } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useState } from 'react'
 
 import type { ProfileData } from '@/app/server/get-profile-data'
 import { AddCustomLink } from '@/components/common/user-card/add-custom-link'
 import { EditSocialLinks } from '@/components/common/user-card/edit-social-links'
+import { TrackedLink } from '@/components/common/user-card/tracked-link'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { MOCK_PROFILE } from '@/lib/mocks/profile'
 import { cn } from '@/lib/utils'
@@ -35,6 +35,7 @@ type UserCardProps = {
   avatarUrl?: string | null
   isOwner?: boolean
   preview?: boolean
+  profileId?: string
 }
 
 export function UserCard({
@@ -42,6 +43,7 @@ export function UserCard({
   avatarUrl = null,
   isOwner = false,
   preview = false,
+  profileId,
 }: UserCardProps) {
   const [localDisplayName, setLocalDisplayName] = useState<string | null>(null)
   const [localDescription, setLocalDescription] = useState<string | null>(null)
@@ -112,17 +114,24 @@ export function UserCard({
               )
             }
 
+            if (!profileId) {
+              return null
+            }
+
             return (
-              <Link
+              <TrackedLink
                 key={key}
-                href={url!}
+                profileId={profileId}
+                kind="social"
+                network={key}
+                url={url!}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
                 className={linkStyles}
               >
                 <Icon />
-              </Link>
+              </TrackedLink>
             )
           })}
 
@@ -138,7 +147,7 @@ export function UserCard({
       <div className="flex min-h-[172px] w-full flex-col gap-3">
         <div className="flex w-full flex-col items-center gap-3">
           {(profileData.customLinks ?? []).map((link, index) =>
-            preview ? (
+            preview || !profileId ? (
               <span
                 key={index}
                 className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'w-full')}
@@ -146,15 +155,17 @@ export function UserCard({
                 {link.title}
               </span>
             ) : (
-              <Link
+              <TrackedLink
                 key={index}
-                href={link.url}
+                profileId={profileId}
+                kind="custom"
+                url={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(buttonVariants({ variant: 'default', size: 'default' }), 'w-full')}
               >
                 {link.title}
-              </Link>
+              </TrackedLink>
             )
           )}
           {!preview && <AddCustomLink customLinks={profileData.customLinks} isOwner={isOwner} />}

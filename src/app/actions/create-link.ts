@@ -1,14 +1,16 @@
 'use server'
 
 import { Timestamp } from 'firebase-admin/firestore'
+import { after } from 'next/server'
 
+import { EVENTS, trackServer } from '@/lib/analytics'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/firebase'
 
 export async function createLink(link: string) {
   const session = await auth()
 
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return
   }
 
@@ -18,6 +20,9 @@ export async function createLink(link: string) {
       totalVisits: 0,
       createdAt: Timestamp.now().toMillis(),
     })
+
+    const userId = session.user.id
+    after(() => trackServer(EVENTS.PROFILE_CREATED, { userId, profileId: link }, { userId }))
 
     return true
   } catch (error) {

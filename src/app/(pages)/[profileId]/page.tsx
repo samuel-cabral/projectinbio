@@ -32,7 +32,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
     : null
 
   if (!isOwner) {
-    await increaseProfileVisits(profileId)
+    await increaseProfileVisits(profileId, {
+      ownerUserId: profileData.userId,
+      viewerUserId: session?.user?.id,
+    })
   }
 
   const hasActiveSubscription =
@@ -58,7 +61,12 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
       )}
 
       <div className="flex h-min w-1/2 justify-center">
-        <UserCard profileData={profileData} avatarUrl={avatarUrl} isOwner={isOwner} />
+        <UserCard
+          profileData={profileData}
+          avatarUrl={avatarUrl}
+          isOwner={isOwner}
+          profileId={profileId}
+        />
       </div>
 
       <div className="flex w-full flex-wrap content-start justify-center gap-4 overflow-y-auto">
@@ -68,6 +76,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ profil
             project={project}
             isOwner={isOwner}
             imgUrl={(await getDownloadUrlFromPath(project.imagePath)) || ''}
+            viewerUserId={session?.user?.id}
           />
         ))}
         {isOwner && <NewProjectButton profileId={profileId} />}

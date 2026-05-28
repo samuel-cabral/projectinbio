@@ -26,7 +26,7 @@ pnpm format:check    # Prettier check formatting
 
 - `src/app/actions/` — Server Actions (`'use server'`): all write operations (create project, update profile, manage links, track visits) — see [src/app/actions/CLAUDE.md](src/app/actions/CLAUDE.md)
 - `src/app/server/` — Server-side read-only data fetching functions — see [src/app/server/CLAUDE.md](src/app/server/CLAUDE.md)
-- `src/app/(pages)/` — Route group: landing page (`page.tsx`), profile pages (`[profileId]/`), link creation (`criar/`), upgrade flow (`[profileId]/upgrade/`) — see [src/app/(pages)/CLAUDE.md](src/app/(pages)/CLAUDE.md)
+- `src/app/(pages)/` — Route group: landing page (`page.tsx`), profile pages (`[profileId]/`), link creation (`criar/`), upgrade flow (`[profileId]/upgrade/`) — see [src/app/(pages)/CLAUDE.md](<src/app/(pages)/CLAUDE.md>)
 - `src/app/api/` — Route Handlers: NextAuth + Stripe checkout/portal/webhook — see [src/app/api/CLAUDE.md](src/app/api/CLAUDE.md)
 - `src/components/` — UI primitives, common feature components, landing-page sections — see [src/components/CLAUDE.md](src/components/CLAUDE.md)
 - `src/hooks/` — Client-side React hooks — see [src/hooks/CLAUDE.md](src/hooks/CLAUDE.md)
@@ -77,6 +77,10 @@ STRIPE_WEBHOOK_SECRET                 # Stripe webhook signing secret (whsec_*)
 NEXT_PUBLIC_STRIPE_PUB_KEY            # Stripe publishable key (pk_test_*)
 NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID   # Stripe Price ID for monthly plan
 NEXT_PUBLIC_STRIPE_ANNUAL_PRICE_ID    # Stripe Price ID for annual plan
+NEXT_PUBLIC_GA_MEASUREMENT_ID         # GA4 measurement ID (G-XXXXXXXXXX)
+NEXT_PUBLIC_MIXPANEL_TOKEN            # Mixpanel project token (client SDK)
+MIXPANEL_TOKEN                        # Mixpanel project token (server SDK; mesmo valor do NEXT_PUBLIC_*)
+GA_API_SECRET                         # GA4 Measurement Protocol API secret (server-only)
 ```
 
 ## Git Conventions

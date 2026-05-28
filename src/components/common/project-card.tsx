@@ -10,9 +10,10 @@ type ProjectCardProps = {
   project: ProjectData
   isOwner: boolean
   imgUrl: string | null
+  viewerUserId?: string
 }
 
-export function ProjectCard({ project, isOwner, imgUrl }: ProjectCardProps) {
+export function ProjectCard({ project, isOwner, imgUrl, viewerUserId }: ProjectCardProps) {
   const projectUrl = `${project.projectUrl}`
   const formattedProjectUrl = projectUrl.startsWith('http') ? projectUrl : `https://${projectUrl}`
 
@@ -20,7 +21,7 @@ export function ProjectCard({ project, isOwner, imgUrl }: ProjectCardProps) {
 
   async function handleClick() {
     if (!isOwner && profileId && project.id) {
-      await increaseProjectVisits(profileId, project.id)
+      await increaseProjectVisits(profileId, project.id, { viewerUserId })
     }
   }
 

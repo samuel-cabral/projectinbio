@@ -3,7 +3,9 @@
 import { randomUUID } from 'node:crypto'
 
 import { Timestamp } from 'firebase-admin/firestore'
+import { after } from 'next/server'
 
+import { EVENTS, trackServer } from '@/lib/analytics'
 import { auth } from '@/lib/auth'
 import { db, storage } from '@/lib/firebase'
 
@@ -11,7 +13,7 @@ import { getProfileData } from '../server/get-profile-data'
 
 export async function createProject(formData: FormData) {
   const session = await auth()
-  if (!session) return false
+  if (!session?.user?.id) return false
 
   const profileId = (formData.get('profileId') as string)?.trim()
   if (!profileId) {
@@ -20,7 +22,7 @@ export async function createProject(formData: FormData) {
   }
 
   const profile = await getProfileData(profileId)
-  if (!profile || profile.userId !== session.user?.id) return false
+  if (!profile || profile.userId !== session.user.id) return false
 
   const projectTitle = String(formData.get('projectTitle') ?? '').trim()
   const projectDescription = String(formData.get('projectDescription') ?? '').trim()
@@ -46,13 +48,23 @@ export async function createProject(formData: FormData) {
       .collection('projects')
       .doc(generatedId)
       .set({
-        userId: session.user?.id,
+        userId: session.user.id,
         projectTitle,
         projectDescription,
         projectUrl,
         ...(imagePath && { imagePath }),
         createdAt: Timestamp.now().toMillis(),
       })
+
+    const userId = session.user.id
+    after(() =>
+      trackServer(
+        EVENTS.PROJECT_CREATED,
+        { userId, profileId, projectId: generatedId, hasImage: hasValidImage },
+        { userId }
+      )
+    )
+
     return true
   } catch (error) {
     console.error('Erro ao criar projeto:', error)
