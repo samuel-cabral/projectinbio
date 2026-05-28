@@ -1,3 +1,4 @@
+import type { HeroTexts } from '@/app/server/get-texts-by-slug'
 import { MOCK_PROFILE, MOCK_PROJECTS } from '@/lib/mocks/profile'
 
 import { ProjectCard } from '../common/project-card'
@@ -5,15 +6,20 @@ import { TotalVisits } from '../common/total-visits'
 import { UserCard } from '../common/user-card/user-card'
 import { HeroLinkInput } from './hero-link-input'
 
-export function Hero() {
+type HeroProps = {
+  texts?: HeroTexts
+}
+
+export function Hero({ texts }: HeroProps) {
   return (
     <div className="flex h-screen">
       <div className="mt-[35vh] flex w-full flex-col gap-2">
         <h1 className="max-w-[600px] text-5xl leading-[64px] font-bold text-white">
-          Seus projetos e redes sociais em um único link
+          {texts?.title ?? 'Seus projetos e redes sociais em um único link'}
         </h1>
         <h2 className="text-muted-foreground text-xl leading-6">
-          Crie sua própria página de projetos e compartilhe eles com o mundo.
+          {texts?.description ??
+            'Crie sua própria página de projetos e compartilhe eles com o mundo.'}
           <br />
           Acompanhe o engajamento com Analytics de clicks.
         </h2>
@@ -28,10 +34,10 @@ export function Hero() {
             <TotalVisits totalVisits={MOCK_PROFILE.totalVisits} />
           </div>
           <div className="absolute top-[20%] -left-[45%] -z-10">
-            <ProjectCard project={MOCK_PROJECTS[0]} isOwner={false} imgUrl="project1.png" />
+            <ProjectCard project={MOCK_PROJECTS[0]} isOwner={false} imgUrl="/project1.png" />
           </div>
           <div className="absolute -top-[5%] -left-[55%] -z-10">
-            <ProjectCard project={MOCK_PROJECTS[1]} isOwner={false} imgUrl="project2.png" />
+            <ProjectCard project={MOCK_PROJECTS[1]} isOwner={false} imgUrl="/project2.png" />
           </div>
         </div>
       </div>
