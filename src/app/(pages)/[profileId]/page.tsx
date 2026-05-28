@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 
@@ -11,6 +12,11 @@ import { auth } from '@/lib/auth'
 import { getDownloadUrlFromPath } from '../../../lib/firebase'
 import { getProfileData } from '../../server/get-profile-data'
 import { getProfileProjects } from '../../server/get-profile-projects'
+
+export const metadata: Metadata = {
+  title: 'ProjectInBio - Perfil',
+  description: 'ProjectInBio - Seus projetos e redes sociais em um único link',
+}
 
 export default async function ProfilePage({ params }: { params: Promise<{ profileId: string }> }) {
   const { profileId } = await params

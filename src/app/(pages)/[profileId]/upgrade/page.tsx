@@ -1,8 +1,14 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { auth } from '@/lib/auth'
 
 import { CheckoutButtons } from './checkout-buttons'
+
+export const metadata: Metadata = {
+  title: 'ProjectInBio - Upgrade',
+  description: 'ProjectInBio - Escolha o plano que melhor se encaixa pra você',
+}
 
 export default async function UpgradePage() {
   const session = await auth()

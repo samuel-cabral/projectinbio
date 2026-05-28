@@ -1,4 +1,5 @@
 import { Rocket } from 'lucide-react'
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { getProfileIdByUserId } from '@/app/server/get-profile-data'
@@ -8,6 +9,11 @@ import { auth } from '@/lib/auth'
 import { CreateLinkForm } from './create-link-form'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'ProjectInBio - Criar',
+  description: 'ProjectInBio - Criar',
+}
 
 export default async function CriarPage() {
   const session = await auth()
