@@ -25,7 +25,7 @@ export function HeroLinkInput() {
       onSubmit={handleSubmit}
       className="mt-[10vh] flex w-full items-center gap-2"
     >
-      <span className="text-xl text-white">projectinbio.com/</span>
+      <span className="text-xl text-white">projectinbio.luzomind.com/</span>
       <input type="hidden" name="link" value={link} />
       <Input
         type="text"
